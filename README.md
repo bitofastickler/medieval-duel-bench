@@ -47,6 +47,35 @@ The Crimson Warden has held the old ring at Ironmoor for eleven winters. Best of
 
 Phones get an on-screen stick and buttons, but it's built for keyboard and mouse.
 
+## Entries
+
+Each model gets the same prompt and its own file, so the builds can be played side by side.
+
+| Entry | Model | File | Play |
+|:--|:--|:--|:--|
+| **Ironmoor Duel** | Claude (first entry) | [`index.html`](index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/) |
+| **Ashen Crown** | Claude Fable 5.2 | [`fable-5.2/index.html`](fable-5.2/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/fable-5.2/) |
+
+### Ashen Crown (Fable 5.2)
+
+![Ashen Crown: an azure knight faces the horned Ashen King in a brazier-lit stone ring](assets/fable-5.2.png)
+
+First to three rounds against Varkos, the Ashen King. Mouse aims your knight, so a swing only lands if the blade is actually pointed at him.
+
+| | |
+|:--|:--|
+| **Engine** | Three.js r160 as an ES module from a CDN, one `fable-5.2/index.html`. Bloom is loaded as an optional addon and the game runs without it |
+| **Assets** | None. Knights, arena, banners and heraldry are primitives and canvas drawings; sound is synthesized live |
+| **Animation** | Sword hand, shield hand and feet are driven by two-bone IK from keyframed targets, so limbs stay attached through every move |
+| **Combat** | Three-cut light combo, heavy overhead with late-windup poise, feints, timed parries, guard breaks, ripostes, dodges with invulnerability frames, blade-on-blade clashes |
+| **Hit detection** | The blade segment is swept between physics steps against capsules built from the live skeleton, and against the raised shield |
+| **Opponent** | Reaction-delayed AI that tracks your habits (aggression, turtling, dodging), drops its guard to bait a swing, feints heavies, and punishes whiffs. Three difficulty levels |
+| **Game feel** | Hit-stop, camera shake, FOV kick, sparks, blade trails, parry slow-motion, a verlet ragdoll death with a sword that tumbles free |
+
+Controls are the ones in the prompt, plus `Q` to lock your facing onto the foe and `M` to mute. Tapping `Space` during a heavy windup feints.
+
+Built in one turn from the prompt below, with no human edits. The model ran its own headless checks before publishing and made two fixes: a dodge speed curve that produced invalid positions on its last step, and an arena rim that had been built as a solid lid over the ring.
+
 <a name="why-a-duel"></a>
 ## Why a duel makes a good benchmark
 
