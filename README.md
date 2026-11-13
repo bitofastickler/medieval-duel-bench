@@ -1,167 +1,72 @@
-<div align="center">
-
 # Medieval Duel Bench
 
-### Can a new model build a sword fight that's actually fun?
+**One prompt. Four playable builds. See what the models actually made.**
 
-One prompt. No supplied assets. A playable 3D duel in a single HTML file.
+[**Play & compare →**](https://bitofastickler.github.io/medieval-duel-bench/) · [Shared prompt](#the-prompt) · [Build notes & screenshots](docs/BUILD_NOTES.md) · [Scoring rubric](docs/BUILD_NOTES.md#score-your-own-model)
 
-**[Play Ironmoor Duel in your browser →](https://bitofastickler.github.io/medieval-duel-bench/)** · **[What it tests](#why-a-duel)** · **[Score your own model](#score-your-own-model)** · **[Read the prompt](#the-prompt)**
+[![The shared benchmark homepage with four playable builds](assets/benchmark-overview.jpg)](https://bitofastickler.github.io/medieval-duel-bench/)
 
-**Built by Claude (Anthropic) · Runs in any desktop browser · No install, accounts, or API keys**
+An independent experiment by [bitofastickler](https://github.com/bitofastickler). Each entry is a standalone HTML sword duel with procedural models, animation, combat, and sound. Use a desktop browser, keyboard, and mouse. No accounts or API keys.
 
-![Ironmoor Duel: a blue knight faces the Crimson Warden in a torch-lit stone arena](assets/screenshot.png)
+## Choose a build
 
-</div>
+| Build | Model / run | What differs | Recorded validation | Play |
+|:--|:--|:--|:--|:--|
+| **Ironmoor Duel** | Claude · original | Lock-on movement; chained light cuts; heavy poise; parry slow-motion | Reported headless smoke test; one overlay fix | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=ironmoor) |
+| **Ashen Crown** | Claude Fable 5.2 | Mouse aim + optional lock-on; three-cut combo; two-bone IK; Verlet ragdoll | Reported headless checks; two fixes | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=ashen-crown) |
+| **Cinder Oath** | OpenAI Codex · separate run | Mouse aim; directional round shield; 120 Hz blade sweeps; sustained baiting | 27 in-browser combat/state checks; 60-second simulation; browser interaction checks | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=cinder-oath) |
+| **Iron Vigil** | OpenAI Codex · separate run | Mouse aim + optional lock-on; kite shield and guarding-sword collision; heavy feints | 18 simulation checks using real Three.js and a stubbed renderer/DOM | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=iron-vigil) |
 
----
+**Integration check (13 November 2026):** all four builds started a round in the shared browser player; build switching and the responsive homepage were checked. This confirms launch and navigation, not comparative gameplay performance.
 
-## What this is
+The site’s player lets you switch builds and return to the comparison without losing your place in the repo. Direct standalone versions remain available at [Ironmoor](ironmoor/index.html), [Ashen Crown](fable-5.2/index.html), [Cinder Oath](codex/index.html), and [Iron Vigil](iron-vigil/index.html).
 
-A fun, experimental benchmark for new models. Give a model the prompt below and see whether it can produce a 3D melee game that runs on the first try *and* feels good to play.
+## What the results tell us
 
-This repo holds the first entry: **Ironmoor Duel**, a Claude output. Take the same prompt to the next model you want to size up, play the two builds side by side, and the differences jump out fast.
+**The builds differ in implemented behavior and validation coverage. There is no published head-to-head gameplay ranking yet.** The test counts above come from different suites, so 27 versus 18 is not a quality score. Comparable FPS, latency, generation time, cost, token usage, and human play scores have not been recorded.
 
-## Ironmoor Duel
+- **Ironmoor:** the original baseline, with automatic facing and chained cuts.
+- **Ashen Crown:** adds optional manual aim, a three-hit combo, articulated IK, and a Verlet ragdoll.
+- **Cinder Oath:** emphasizes independent mouse aim, directional shield defense, and reaction-delayed whiff punishment.
+- **Iron Vigil:** another Codex run with an exact kite-shield collision shape, a guarding sword, and heavy feints.
 
-The Crimson Warden has held the old ring at Ironmoor for eleven winters. Best of three rounds. Watch his wind-up, raise your shield on the strike to parry, and make every missed swing cost him.
-
-| | |
-|:--|:--|
-| **Engine** | Three.js r128 from a CDN, one `index.html`, about 1,000 lines |
-| **Assets** | None. Knights, arena, banners, and heraldry are built from primitives and canvas drawings; sound is synthesized live |
-| **Combat** | Light cuts that chain, overhead blows that can't be flinched, timed parries, feints, dodges with invulnerability frames, guard breaks, sword-on-sword clashes |
-| **Hit detection** | Traced from the real blade position each physics step, not a distance check |
-| **Opponent** | Reaction-delayed AI that presses, baits, circles, punishes whiffs, interrupts slow attacks, and feints. Three difficulty levels |
-| **Game feel** | Hit-stop, camera shake, sparks, blade trails, parry slow-motion, a toppling death with a sword that clatters away |
-
-### Controls
-
-| Input | Action |
-|:--|:--|
-| `W` `A` `S` `D` | Advance, retreat, circle (you stay locked on) |
-| Left click / `J` | Light cut. Fast, and chains into a second cut |
-| Right click / `K` | Overhead blow. Slow, heavy, keeps going if you're hit |
-| `Space` / `L` | Block. Raise it at the last instant to **parry**. During your own overhead wind-up, it **feints** |
-| `Shift` | Dodge in the direction you're moving |
-
-Phones get an on-screen stick and buttons, but it's built for keyboard and mouse.
-
-## Entries
-
-Each model gets the same prompt and its own file, so the builds can be played side by side.
-
-| Entry | Model | File | Play |
-|:--|:--|:--|:--|
-| **Ironmoor Duel** | Claude (first entry) | [`index.html`](index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/) |
-| **Ashen Crown** | Claude Fable 5.2 | [`fable-5.2/index.html`](fable-5.2/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/fable-5.2/) |
-| **Iron Vigil** | OpenAI Codex | [`codex/index.html`](codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
-
-### Ashen Crown (Fable 5.2)
-
-![Ashen Crown: an azure knight faces the horned Ashen King in a brazier-lit stone ring](assets/fable-5.2.png)
-
-First to three rounds against Varkos, the Ashen King. Mouse aims your knight, so a swing only lands if the blade is actually pointed at him.
-
-| | |
-|:--|:--|
-| **Engine** | Three.js r160 as an ES module from a CDN, one `fable-5.2/index.html`. Bloom is loaded as an optional addon and the game runs without it |
-| **Assets** | None. Knights, arena, banners and heraldry are primitives and canvas drawings; sound is synthesized live |
-| **Animation** | Sword hand, shield hand and feet are driven by two-bone IK from keyframed targets, so limbs stay attached through every move |
-| **Combat** | Three-cut light combo, heavy overhead with late-windup poise, feints, timed parries, guard breaks, ripostes, dodges with invulnerability frames, blade-on-blade clashes |
-| **Hit detection** | The blade segment is swept between physics steps against capsules built from the live skeleton, and against the raised shield |
-| **Opponent** | Reaction-delayed AI that tracks your habits (aggression, turtling, dodging), drops its guard to bait a swing, feints heavies, and punishes whiffs. Three difficulty levels |
-| **Game feel** | Hit-stop, camera shake, FOV kick, sparks, blade trails, parry slow-motion, a verlet ragdoll death with a sword that tumbles free |
-
-Controls are the ones in the prompt, plus `Q` to lock your facing onto the foe and `M` to mute. Tapping `Space` during a heavy windup feints.
-
-Built in one turn from the prompt below, with no human edits. The model ran its own headless checks before publishing and made two fixes: a dodge speed curve that produced invalid positions on its last step, and an arena rim that had been built as a solid lid over the ring.
-
-### Iron Vigil (OpenAI Codex)
-
-First to three victories against the Hollow Warden in a torch-lit stone keep. One standalone HTML file, with all models built from geometry and animated procedurally. Three.js r160 from a CDN is the only network dependency; the interface uses system fonts and the game loads no external assets.
-
-| | |
-|:--|:--|
-| **Combat** | Light cuts, heavy overheads, feints, stamina, guard breaks, dodges, 180 ms parries, and enforced recovery after a missed heavy |
-| **Hit detection** | Swept blade segments against capsules following the live rig, the exact kite shield, and the guarding sword |
-| **Opponent** | Reaction-delayed AI reads your stance, baits attacks, and closes to punish whiffed heavies |
-| **Game feel** | Dynamic torch shadows, hit-stop, camera shake, clash sparks, blade trails, synthesized audio, and a procedural toppling death |
-
-Controls follow the prompt, plus `Q` to toggle aim lock, `J` / `K` for light / heavy attacks, `M` to mute, and `Esc` to pause. Press `Space` during an early heavy wind-up to feint.
-
-Validation included simulation checks for combat and round transitions. Browser playtesting remains unverified because the preview environment failed to start.
-
-<a name="why-a-duel"></a>
-## Why a duel makes a good benchmark
-
-A sword fight packs a lot of hard things into one prompt, and you judge it by playing it, not by reading a score.
-
-| What you're really testing | Where it breaks |
-|:--|:--|
-| 3D math | Arms detach, swords point backwards, models fall through the floor |
-| Procedural animation without assets | Stiff, floaty, or physically impossible swings |
-| Real hit detection | You get hit from behind, or a sword passes through someone with no effect |
-| Game AI | The opponent walks at you and swings forever |
-| Game feel | Hits land with no weight. No pause, no shake, no sound |
-| Long-file coherence | 1,000+ lines that have to work together on the first run |
-| Taking feedback | Ask it to "make parries feel weightier" and see if it makes a targeted fix or rewrites everything |
-
-<a name="score-your-own-model"></a>
-## Score your own model
-
-Give each build ten minutes of play, then mark each row 0 to 2.
-
-| Check | 0 | 1 | 2 |
-|:--|:--|:--|:--|
-| Runs first try | Broken | Runs after a fix | Runs clean |
-| Characters hold together | Limbs fly apart | Occasional glitches | Solid through every move |
-| Blade-based hit detection | Distance check | Partly faked | Dodging a swing actually works |
-| Parry and block | Missing | Works, no reward | Timing matters and pays off |
-| Opponent behavior | Walks and swings | Some variety | Baits, punishes, adapts |
-| Game feel | Nothing | Some effects | Impacts feel heavy |
-| Rounds and restart | Missing | Partial | Full loop, clean restart |
-| Is it fun? | No | For a minute | You want one more round |
+Play each for ten minutes under the same conditions, then use the [eight-part 0–2 rubric](docs/BUILD_NOTES.md#score-your-own-model). The [complete notes](docs/BUILD_NOTES.md) retain the original claims, fixes, screenshots, controls, and provenance so those observations can be checked.
 
 ## The prompt
 
-The model suggested the duel itself when asked for a fun way to test new models. It then wrote this spec, and built the game from it in the same session after a one-word "Sure! Let's try it":
+Give this unchanged prompt to each model in a fresh session:
 
-> Build a single-file HTML 3D medieval sword duel using Three.js (from a CDN). No external assets: build all models from primitives and animate them procedurally.
-> - Player knight vs. AI knight in a torch-lit arena with dynamic shadows
-> - Controls: WASD to move, mouse to aim, left click for a light attack, right click for a heavy attack, Space to block, Shift to dodge
-> - Stamina system: attacks, blocks and dodges cost stamina, and a well-timed block **parries** and staggers the opponent
-> - Hit detection based on where the sword actually is, not a distance check
-> - The AI reads your stance, baits you, and punishes whiffed heavies
-> - Game feel: hit-stop, camera shake, sparks on clashes, a ragdoll-ish death
-> - Health and stamina bars, a round system, and a restart screen
+```text
+Build a single-file HTML 3D medieval sword duel using Three.js (from a CDN). No external assets: build all models from primitives and animate them procedurally.
+- Player knight vs. AI knight in a torch-lit arena with dynamic shadows
+- Controls: WASD to move, mouse to aim, left click for a light attack, right click for a heavy attack, Space to block, Shift to dodge
+- Stamina system: attacks, blocks and dodges cost stamina, and a well-timed block **parries** and staggers the opponent
+- Hit detection based on where the sword actually is, not a distance check
+- The AI reads your stance, baits you, and punishes whiffed heavies
+- Game feel: hit-stop, camera shake, sparks on clashes, a ragdoll-ish death
+- Health and stamina bars, a round system, and a restart screen
+```
 
-To compare fairly, paste that block into a fresh chat with the model you're testing and ask for one file.
+The first Claude run proposed this prompt and implemented it after “Sure! Let’s try it.” Later entries reuse that brief. That origin is part of the experiment’s limitations; it is not a controlled model ranking. Two separate Codex runs produced Iron Vigil and Cinder Oath. Exact underlying Codex model versions were not recorded.
 
-## Provenance and limits
+## Run locally
 
-| | |
+Open `index.html` to browse the comparison or open any game’s `index.html` directly. Alternatively, run `python -m http.server 8000` in the repository and visit `http://localhost:8000`.
+
+Games load Three.js from CDNs. The original Ironmoor build also loads Google Fonts; Ashen Crown optionally loads a bloom addon. No game models, textures, or audio files are downloaded. All original game files and existing screenshots are preserved unchanged.
+
+## Repository layout
+
+| Path | Purpose |
 |:--|:--|
-| Model | Claude (Anthropic) |
-| Where it ran | Claude Code, cloud session |
-| Turns to build | One, from the prompt above |
-| Human edits to the game | None |
-| Model's own fixes | One. Its headless smoke test showed the hidden end-screen overlay was blocking clicks, so it added a one-line CSS rule before publishing |
+| `index.html` | Shared prompt, comparison, evidence, and play links |
+| `play.html` | Common player with build switching and fullscreen |
+| `ironmoor/index.html` | Original Claude build, preserved byte-for-byte |
+| `fable-5.2/index.html` | Ashen Crown, preserved byte-for-byte |
+| `codex/index.html` | Cinder Oath; existing published URL retained |
+| `iron-vigil/index.html` | Iron Vigil; separate path to resolve the Codex-file conflict |
+| `docs/BUILD_NOTES.md` | Full benchmark history, controls, fixes, screenshots, and rubric |
 
-**This is a single run, not a controlled benchmark.** I don't have token counts, generation times, or repeated trials. The model wrote its own spec, so another model working from that spec is playing on Claude's home turf a little. The game is preserved as delivered.
+Future entries should use a unique build-name directory rather than a shared model directory. Add their model/run label, play link, and evidence without replacing previous entries.
 
-## Run it locally
-
-Download or clone the repo, then open `index.html` in Chrome, Edge, or Firefox. It loads Three.js and two Google Fonts from the web, so the first load needs an internet connection.
-
-Each entry's standalone HTML file can be opened directly, including `fable-5.2/index.html` and `codex/index.html`.
-
----
-
-<div align="center">
-
-**The interesting part isn't who wins the duel. It's how each model swings.**
-
-An independent experiment curated by [bitofastickler](https://github.com/bitofastickler). Not an official Anthropic benchmark.
-
-</div>
+Not an official Anthropic or OpenAI benchmark.
