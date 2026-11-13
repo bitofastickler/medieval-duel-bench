@@ -55,6 +55,7 @@ Each model gets the same prompt and its own file, so the builds can be played si
 |:--|:--|:--|:--|
 | **Ironmoor Duel** | Claude (first entry) | [`index.html`](index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/) |
 | **Ashen Crown** | Claude Fable 5.2 | [`fable-5.2/index.html`](fable-5.2/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/fable-5.2/) |
+| **Iron Vigil** | OpenAI Codex | [`codex/index.html`](codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
 
 ### Ashen Crown (Fable 5.2)
 
@@ -75,6 +76,21 @@ First to three rounds against Varkos, the Ashen King. Mouse aims your knight, so
 Controls are the ones in the prompt, plus `Q` to lock your facing onto the foe and `M` to mute. Tapping `Space` during a heavy windup feints.
 
 Built in one turn from the prompt below, with no human edits. The model ran its own headless checks before publishing and made two fixes: a dodge speed curve that produced invalid positions on its last step, and an arena rim that had been built as a solid lid over the ring.
+
+### Iron Vigil (OpenAI Codex)
+
+First to three victories against the Hollow Warden in a torch-lit stone keep. One standalone HTML file, with all models built from geometry and animated procedurally. Three.js r160 from a CDN is the only network dependency; the interface uses system fonts and the game loads no external assets.
+
+| | |
+|:--|:--|
+| **Combat** | Light cuts, heavy overheads, feints, stamina, guard breaks, dodges, 180 ms parries, and enforced recovery after a missed heavy |
+| **Hit detection** | Swept blade segments against capsules following the live rig, the exact kite shield, and the guarding sword |
+| **Opponent** | Reaction-delayed AI reads your stance, baits attacks, and closes to punish whiffed heavies |
+| **Game feel** | Dynamic torch shadows, hit-stop, camera shake, clash sparks, blade trails, synthesized audio, and a procedural toppling death |
+
+Controls follow the prompt, plus `Q` to toggle aim lock, `J` / `K` for light / heavy attacks, `M` to mute, and `Esc` to pause. Press `Space` during an early heavy wind-up to feint.
+
+Validation included simulation checks for combat and round transitions. Browser playtesting remains unverified because the preview environment failed to start.
 
 <a name="why-a-duel"></a>
 ## Why a duel makes a good benchmark
@@ -137,6 +153,8 @@ To compare fairly, paste that block into a fresh chat with the model you're test
 ## Run it locally
 
 Download or clone the repo, then open `index.html` in Chrome, Edge, or Firefox. It loads Three.js and two Google Fonts from the web, so the first load needs an internet connection.
+
+Each entry's standalone HTML file can be opened directly, including `fable-5.2/index.html` and `codex/index.html`.
 
 ---
 
