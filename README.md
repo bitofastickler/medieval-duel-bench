@@ -55,6 +55,7 @@ Each model gets the same prompt and its own file, so the builds can be played si
 |:--|:--|:--|:--|
 | **Ironmoor Duel** | Claude (first entry) | [`index.html`](index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/) |
 | **Ashen Crown** | Claude Fable 5.2 | [`fable-5.2/index.html`](fable-5.2/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/fable-5.2/) |
+| **Cinder Oath** | OpenAI Codex | [`codex/index.html`](codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
 
 ### Ashen Crown (Fable 5.2)
 
@@ -75,6 +76,26 @@ First to three rounds against Varkos, the Ashen King. Mouse aims your knight, so
 Controls are the ones in the prompt, plus `Q` to lock your facing onto the foe and `M` to mute. Tapping `Space` during a heavy windup feints.
 
 Built in one turn from the prompt below, with no human edits. The model ran its own headless checks before publishing and made two fixes: a dodge speed curve that produced invalid positions on its last step, and an arena rim that had been built as a solid lid over the ring.
+
+### Cinder Oath (Codex)
+
+A duel against the Cinder Warden in a ruined, torch-lit monastery. First to three rounds, with three difficulty levels. The mouse aims at a point on the arena floor; WASD moves independently of facing.
+
+| | |
+|:--|:--|
+| **Engine** | Three.js r160 from a pinned CDN with a second CDN fallback. One `codex/index.html`, approximately 53 KB |
+| **Assets** | None. Primitive geometry, procedural fire halos, articulated knights, animated cloth, particles, and synthesized Web Audio. No image, font, model, or audio downloads |
+| **Combat** | Light cuts, heavy overheads, directional shield blocks, 180 ms parries, guard breaks, stamina recovery, and directional dodges |
+| **Hit detection** | 120 Hz simulation. The rendered blade's world-space segment is swept against live body capsules, oriented shield discs, and opposing active blades. Each attack can connect only once |
+| **Opponent** | Delayed observation of visible state, circling, sustained baiting, heavy feints, retreat to recover stamina, and a committed punish after an observed missed heavy |
+| **Game feel** | Hit-stop, camera shake, blade trails, clash sparks, procedural sound, and a damped articulated death pose |
+| **Round loop** | First to three, round announcements, victory/defeat statistics, restart, difficulty selection, pause, and automatic pause when focus is lost |
+
+Controls follow the prompt. `J` / `K` also trigger light / heavy attacks; `Esc` pauses and `M` mutes. The game is designed for keyboard and mouse.
+
+Built from the benchmark prompt in one conversation, with agent-led testing and refinements. Validation included 27 in-browser combat checks, a 60-second simulation, and browser checks of the round loop, controls, pause/resume, and restart. This is functional verification, not a playability score or a substitute for human playtesting.
+
+Open `codex/index.html` directly in a desktop browser, or serve the repository locally. Internet access is needed to load Three.js. The Pages link becomes available after this entry is merged and GitHub Pages redeploys.
 
 <a name="why-a-duel"></a>
 ## Why a duel makes a good benchmark
