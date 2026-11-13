@@ -6,9 +6,9 @@
 
 One prompt. No supplied assets. A playable 3D duel in a single HTML file.
 
-**[Play Ironmoor Duel in your browser →](https://bitofastickler.github.io/medieval-duel-bench/)** · **[What it tests](#why-a-duel)** · **[Score your own model](#score-your-own-model)** · **[Read the prompt](#the-prompt)**
+**[Choose from all three duels →](https://bitofastickler.github.io/medieval-duel-bench/)** · **[Play Ironmoor Duel](https://bitofastickler.github.io/medieval-duel-bench/ironmoor/)** · **[What it tests](#why-a-duel)** · **[Score your own model](#score-your-own-model)** · **[Read the prompt](#the-prompt)**
 
-**Built by Claude (Anthropic) · Runs in any desktop browser · No install, accounts, or API keys**
+**First entry built by Claude (Anthropic) · Runs in any desktop browser · No install, accounts, or API keys**
 
 ![Ironmoor Duel: a blue knight faces the Crimson Warden in a torch-lit stone arena](assets/screenshot.png)
 
@@ -22,13 +22,15 @@ A fun, experimental benchmark for new models. Give a model the prompt below and 
 
 This repo holds the first entry: **Ironmoor Duel**, a Claude output. Take the same prompt to the next model you want to size up, play the two builds side by side, and the differences jump out fast.
 
+The [GitHub Pages home page](https://bitofastickler.github.io/medieval-duel-bench/) is a launcher for all three games. Ironmoor's original HTML is preserved byte-for-byte at `ironmoor/index.html`; the Fable build and all existing screenshots are unchanged. The descriptions, prompt, provenance, and scoring rubric below are retained.
+
 ## Ironmoor Duel
 
 The Crimson Warden has held the old ring at Ironmoor for eleven winters. Best of three rounds. Watch his wind-up, raise your shield on the strike to parry, and make every missed swing cost him.
 
 | | |
 |:--|:--|
-| **Engine** | Three.js r128 from a CDN, one `index.html`, about 1,000 lines |
+| **Engine** | Three.js r128 from a CDN, one `ironmoor/index.html`, about 1,000 lines |
 | **Assets** | None. Knights, arena, banners, and heraldry are built from primitives and canvas drawings; sound is synthesized live |
 | **Combat** | Light cuts that chain, overhead blows that can't be flinched, timed parries, feints, dodges with invulnerability frames, guard breaks, sword-on-sword clashes |
 | **Hit detection** | Traced from the real blade position each physics step, not a distance check |
@@ -53,8 +55,9 @@ Each model gets the same prompt and its own file, so the builds can be played si
 
 | Entry | Model | File | Play |
 |:--|:--|:--|:--|
-| **Ironmoor Duel** | Claude (first entry) | [`index.html`](index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/) |
+| **Ironmoor Duel** | Claude (first entry) | [`ironmoor/index.html`](ironmoor/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/ironmoor/) |
 | **Ashen Crown** | Claude Fable 5.2 | [`fable-5.2/index.html`](fable-5.2/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/fable-5.2/) |
+| **Cinder Oath** | OpenAI Codex | [`codex/index.html`](codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
 
 ### Ashen Crown (Fable 5.2)
 
@@ -75,6 +78,26 @@ First to three rounds against Varkos, the Ashen King. Mouse aims your knight, so
 Controls are the ones in the prompt, plus `Q` to lock your facing onto the foe and `M` to mute. Tapping `Space` during a heavy windup feints.
 
 Built in one turn from the prompt below, with no human edits. The model ran its own headless checks before publishing and made two fixes: a dodge speed curve that produced invalid positions on its last step, and an arena rim that had been built as a solid lid over the ring.
+
+### Cinder Oath (Codex)
+
+A duel against the Cinder Warden in a ruined, torch-lit monastery. First to three rounds, with three difficulty levels. The mouse aims at a point on the arena floor; WASD moves independently of facing.
+
+| | |
+|:--|:--|
+| **Engine** | Three.js r160 from a pinned CDN with a second CDN fallback. One `codex/index.html`, approximately 53 KB |
+| **Assets** | None. Primitive geometry, procedural fire halos, articulated knights, animated cloth, particles, and synthesized Web Audio. No image, font, model, or audio downloads |
+| **Combat** | Light cuts, heavy overheads, directional shield blocks, 180 ms parries, guard breaks, stamina recovery, and directional dodges |
+| **Hit detection** | 120 Hz simulation. The rendered blade's world-space segment is swept against live body capsules, oriented shield discs, and opposing active blades. Each attack can connect only once |
+| **Opponent** | Delayed observation of visible state, circling, sustained baiting, heavy feints, retreat to recover stamina, and a committed punish after an observed missed heavy |
+| **Game feel** | Hit-stop, camera shake, blade trails, clash sparks, procedural sound, and a damped articulated death pose |
+| **Round loop** | First to three, round announcements, victory/defeat statistics, restart, difficulty selection, pause, and automatic pause when focus is lost |
+
+Controls follow the prompt. `J` / `K` also trigger light / heavy attacks; `Esc` pauses and `M` mutes. The game is designed for keyboard and mouse.
+
+Built from the benchmark prompt in one conversation, with agent-led testing and refinements. Validation included 27 in-browser combat checks, a 60-second simulation, and browser checks of the round loop, controls, pause/resume, and restart. This is functional verification, not a playability score or a substitute for human playtesting.
+
+Open `codex/index.html` directly in a desktop browser, or serve the repository locally. Internet access is needed to load Three.js. All three entries are available from the [GitHub Pages launcher](https://bitofastickler.github.io/medieval-duel-bench/).
 
 <a name="why-a-duel"></a>
 ## Why a duel makes a good benchmark
@@ -136,7 +159,7 @@ To compare fairly, paste that block into a fresh chat with the model you're test
 
 ## Run it locally
 
-Download or clone the repo, then open `index.html` in Chrome, Edge, or Firefox. It loads Three.js and two Google Fonts from the web, so the first load needs an internet connection.
+Download or clone the repo, then open `index.html` in Chrome, Edge, or Firefox to choose a duel. You can also open `ironmoor/index.html`, `fable-5.2/index.html`, or `codex/index.html` directly. Each game loads Three.js from the web; the original Ironmoor build also loads two Google Fonts, so the first load needs an internet connection.
 
 ---
 

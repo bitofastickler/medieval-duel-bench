@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Cinder Oath — a single-file, procedural medieval sword duel. An independent Codex entry for Medieval Duel Bench.">
+<title>Cinder Oath — Medieval Duel</title>
+<style>
+:root{color-scheme:dark;--ivory:#eee4d1;--gold:#ceac70;--muted:#a49b8d;--line:#b9975c40;--blue:#73b5c8;--red:#dc7960}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b1013;color:var(--ivory);font-family:Georgia,'Times New Roman',serif}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:5px}[hidden]{display:none!important}canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}#view{position:fixed;inset:0}#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse,transparent 30%,#05080d99 100%);box-shadow:inset 0 0 100px #0006}#flash{position:fixed;inset:0;pointer-events:none;opacity:0;box-shadow:inset 0 0 140px 40px #bc3b24;transition:opacity .1s}
+.small{font:10px/1.5 Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}.gold{color:var(--gold)}.hud{position:fixed;inset:0;pointer-events:none;padding:28px 38px;z-index:3}#top{display:grid;grid-template-columns:minmax(160px,330px) 1fr minmax(160px,330px);gap:30px;align-items:start}.fighter-name{font-size:18px;letter-spacing:2px;margin:5px 0 10px;display:flex;justify-content:space-between;align-items:baseline}.fighter-name b{font:11px Arial,sans-serif;color:var(--muted);letter-spacing:1px}.bar{background:#05080be0;border:1px solid #c8b28b35;height:9px;padding:2px;box-shadow:0 3px 12px #0009}.bar i{display:block;height:100%;background:linear-gradient(90deg,#3e768e,#a0d6dd);transform-origin:left;transition:width .08s linear}.enemy .bar i{background:linear-gradient(90deg,#a14032,#efab83)}.bar.stamina{height:5px;margin-top:6px;padding:0;border:0;background:#ddd1}.stamina i{background:#baad70!important}.enemy{text-align:right}.enemy .fighter-name{flex-direction:row-reverse}#round{text-align:center;white-space:nowrap;padding-top:6px}#roundLabel{font-size:12px;letter-spacing:3px}#score{margin-top:13px;display:flex;justify-content:center;gap:10px;align-items:center}#score i{display:block;height:7px;width:7px;border:1px solid #ad9878;transform:rotate(45deg)}#score i.won{background:var(--gold);box-shadow:0 0 8px #e5b96a66}#score em{width:20px;font-size:12px;color:#a18c6b;font-style:normal}.bottom{position:absolute;bottom:28px;left:38px;right:38px;display:flex;justify-content:space-between;align-items:end;gap:20px}.controls{display:flex;gap:18px;flex-wrap:wrap;font:10px Arial,sans-serif;letter-spacing:1px;color:#ada99e}.controls span{white-space:nowrap}.controls kbd{color:#eee4cf;font:11px Arial,sans-serif;margin-right:5px;border-bottom:1px solid #927b56;padding-bottom:4px}.stance{margin-bottom:16px;font-size:12px;letter-spacing:3px;color:var(--gold)}#intent{text-align:right;min-width:140px;font-size:12px;line-height:1.7;letter-spacing:1px}#message{position:absolute;top:23%;left:50%;transform:translateX(-50%);text-align:center;font-size:27px;letter-spacing:6px;text-shadow:0 2px 10px #000;opacity:0;transition:opacity .13s;white-space:nowrap}#message.visible{opacity:1}#message small{display:block;font:10px Arial,sans-serif;letter-spacing:2px;margin-top:10px;color:#ddd2be}.overlay{position:fixed;inset:0;z-index:10;display:flex;align-items:center;background:linear-gradient(90deg,#080c12f5 0%,#080c12e8 25%,#080c1275 51%,transparent 78%)}.panel{width:480px;padding:55px 0 50px 64px;max-height:100%;overflow:auto}.crest{color:var(--gold);font-size:40px;line-height:1;display:block;margin-bottom:26px}.eyebrow{font:10px Arial,sans-serif;letter-spacing:4px;color:var(--gold)}h1{font-size:clamp(55px,6vw,86px);font-weight:normal;line-height:.96;letter-spacing:-3px;margin:21px 0 24px}h1 span{color:var(--gold)}.rule{width:54px;height:1px;background:var(--gold);margin:26px 0}.description{font-size:15px;line-height:1.8;color:#b9b2a5;max-width:320px}.action{background:#c9ac76;color:#151719;border:1px solid #e5c899;min-width:242px;padding:17px 28px;letter-spacing:3px;font:11px Arial,sans-serif;margin-top:24px;transition:background .15s,transform .15s}.action:hover{background:#eed6a1;transform:translateY(-2px)}.action:disabled{opacity:.5;cursor:wait}.options{display:flex;gap:18px;align-items:center;margin-top:22px;font:11px Arial,sans-serif;color:#bcb4a4}.options select{background:transparent;border:0;border-bottom:1px solid var(--line);padding:7px;color:var(--ivory);font:11px Arial,sans-serif}.options option{background:#11171c}.text-button{background:none;border:0;border-bottom:1px solid var(--line);color:#bcb4a4;padding:7px;font:11px Arial,sans-serif}.instructions{display:grid;grid-template-columns:58px 1fr;gap:9px 14px;margin-top:28px;font:11px Arial,sans-serif;color:#a7a298}.instructions b{color:#ded5c1;font-weight:normal}.footnote{margin-top:30px;font:9px/1.8 Arial,sans-serif;letter-spacing:2px;color:#6f746f}.result-panel{margin:auto;text-align:center;width:510px;padding:40px;background:#0c1119ed;border:1px solid var(--line);box-shadow:0 30px 100px #0009}#result{background:#03070c80;backdrop-filter:blur(4px)}#result h2{font-weight:normal;font-size:48px;letter-spacing:-1px;margin:18px 0}#result p{font-size:14px;line-height:1.8;color:#beb5a4}#stats{display:flex;justify-content:center;gap:32px;margin:26px 0;font:10px Arial,sans-serif;letter-spacing:2px;color:#9b968d}#stats b{display:block;font:26px Georgia,serif;color:var(--gold);margin-bottom:6px}#pause{background:#040810a8;backdrop-filter:blur(6px)}#pause h2{font-size:38px;font-weight:normal}#error{position:fixed;bottom:20px;left:20px;right:20px;z-index:20;background:#321c17;padding:20px;font:14px/1.6 Arial,sans-serif;border:1px solid #d79062}#reticle{position:fixed;width:22px;height:22px;pointer-events:none;z-index:4;border:1px solid #edc88780;border-radius:50%;transform:translate(-50%,-50%);display:none}#reticle:before,#reticle:after{content:'';position:absolute;background:#eed8af}#reticle:before{width:4px;height:4px;left:8px;top:8px;border-radius:50%}#reticle:after{width:1px;height:5px;left:10px;top:-5px}
+@media(max-width:800px){.hud{padding:18px}#top{gap:15px;grid-template-columns:1fr 85px 1fr}.fighter-name{font-size:12px;letter-spacing:1px}.fighter-name b{font-size:9px}.small{font-size:8px;letter-spacing:1px}#roundLabel{font-size:9px;letter-spacing:1px}.bottom{left:18px;right:18px;bottom:18px}.controls{gap:13px;font-size:9px}#intent{display:none}.panel{padding:30px;width:390px}.overlay{background:linear-gradient(90deg,#080c12ee,#080c1280)}h1{font-size:60px}.description{font-size:14px}.result-panel{width:90%;padding:30px}#message{font-size:22px}.footnote{margin-top:18px}}
+</style>
+<style>
+@media(max-height:800px){.panel{padding-top:24px;padding-bottom:24px}.crest{font-size:30px;margin-bottom:16px}h1{font-size:65px;margin:17px 0}.rule{margin:20px 0}.description{font-size:14px;margin:0}.action{margin-top:20px}.options{margin-top:16px}.instructions{margin-top:22px;gap:8px 14px}.footnote{margin-top:20px}}
+.panel{scrollbar-width:thin;scrollbar-color:#9b855333 transparent}
+</style>
+</head>
+<body>
+<div id="view"></div><div id="vignette"></div><div id="flash"></div><div id="reticle"></div>
+<div id="hud" class="hud" hidden>
+ <div id="top">
+  <section><div class="small">The challenger</div><div class="fighter-name">THE WAYFARER <b id="pHPText">100</b></div><div class="bar" role="progressbar" aria-label="Your health" aria-valuemin="0" aria-valuemax="100" id="pHealth"><i id="pHP"></i></div><div class="bar stamina" role="progressbar" aria-label="Your stamina" aria-valuemin="0" aria-valuemax="100" id="pStamina"><i id="pSP"></i></div></section>
+  <section id="round"><div id="roundLabel">ROUND I</div><div id="score"></div><div class="small" style="margin-top:12px">First to three</div></section>
+  <section class="enemy"><div class="small">Keeper of the last flame</div><div class="fighter-name">THE CINDER WARDEN <b id="eHPText">100</b></div><div class="bar" role="progressbar" aria-label="Warden health" aria-valuemin="0" aria-valuemax="100" id="eHealth"><i id="eHP"></i></div><div class="bar stamina" role="progressbar" aria-label="Warden stamina" aria-valuemin="0" aria-valuemax="100" id="eStamina"><i id="eSP"></i></div></section>
+ </div>
+ <div id="message" role="status"></div>
+ <div class="bottom"><div><div class="stance" id="stance">READY</div><div class="controls"><span><kbd>W A S D</kbd> move</span><span><kbd>MOUSE</kbd> aim</span><span><kbd>LMB / RMB</kbd> light / heavy</span><span><kbd>SPACE</kbd> guard / parry</span><span><kbd>SHIFT</kbd> dodge</span><span><kbd>ESC</kbd> pause</span></div></div><div id="intent"><span class="small">Warden's stance</span><br><span id="eStance">Measuring you</span></div></div>
+</div>
+<section id="menu" class="overlay">
+ <div class="panel"><span class="crest" aria-hidden="true">♜</span><div class="eyebrow">A DUEL AT THE END OF THE WORLD</div><h1>CINDER<br><span>OATH</span></h1><div class="rule"></div><p class="description">The fire is dying. The Warden remains.<br>Enter the ring. Read the blade.<br>Make him break his oath.</p><button id="start" class="action" disabled>LIGHTING THE ARENA…</button><div class="options"><label>Opponent <select id="difficulty"><option value="0">Squire</option><option value="1" selected>Knight</option><option value="2">Warden</option></select></label><button class="text-button" id="sound">Sound: on</button></div><div class="instructions"><b>WASD</b><span>Move through the arena</span><b>Mouse</b><span>Point your blade • left / right click to attack</span><b>Space</b><span>Hold to guard • time the raise to parry</span><b>Shift</b><span>Dodge • costs stamina, saves your skin</span></div><div class="footnote">FIRST TO THREE • KEYBOARD & MOUSE<br>ONE FILE. NO ASSETS. ONLY STEEL.</div></div>
+</section>
+<section id="result" class="overlay" hidden><div class="result-panel"><div class="eyebrow" id="resultEyebrow">THE OATH IS BROKEN</div><h2 id="resultTitle">Victory</h2><p id="resultCopy"></p><div id="stats"></div><button id="restart" class="action">ENTER THE RING AGAIN</button><br><button id="back" class="text-button" style="margin-top:18px">Return to title</button></div></section>
+<section id="pause" class="overlay" hidden><div class="result-panel"><div class="eyebrow">THE FIRE CAN WAIT</div><h2>Duel paused</h2><p>Mouse aims on the arena floor.<br>Tap Space just before contact for a parry.<br>J / K also perform light / heavy attacks. M toggles sound.</p><button id="resume" class="action">RESUME DUEL</button><br><button id="abandon" class="text-button" style="margin-top:18px">Return to title</button></div></section>
+<div id="error" role="alert" hidden></div>
+<script>
+/* CINDER OATH — Codex entry, Medieval Duel Bench.
+   All meshes, animation, particles and audio are generated here.
+   Three.js r160 is the only network dependency (CDN failover below).
+   Combat runs at 120 Hz. Swept WORLD-SPACE blade segments intersect live
+   body capsules, oriented shield discs and opposing blades. Distance is
+   used for AI tactics/body separation, never as an attack damage test. */
+'use strict';
+const $=id=>document.getElementById(id);
+function showError(message){$('error').hidden=false;$('error').textContent=message;}
+async function loadEngine(){
+ for(const url of ['https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js','https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js']){
+  try{await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=url;s.onload=resolve;s.onerror=reject;document.head.appendChild(s);});if(window.THREE)return boot();}catch(e){}
+ }
+ showError('Three.js could not load. Connect to the internet and reload this file. No other assets are required.');$('start').textContent='ENGINE UNAVAILABLE';
+}
+function boot(){try{main();}catch(error){console.error(error);showError('The arena could not start: '+error.message);}}
+function main(){
+const T=THREE, V=T.Vector3, TAU=Math.PI*2, clamp=(x,a,b)=>Math.max(a,Math.min(b,x)), mix=(a,b,t)=>a+(b-a)*t, smooth=t=>t*t*(3-2*t);
+let seed=17011;function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}const range=(a,b)=>mix(a,b,rand());
+const scene=new T.Scene();scene.background=new T.Color(0x101820);scene.fog=new T.FogExp2(0x111820,.029);
+const renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;$('view').appendChild(renderer.domElement);renderer.domElement.setAttribute('aria-label','Cinder Oath 3D duel arena');renderer.domElement.tabIndex=0;
+renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();pauseGame();showError('The graphics context was interrupted. Reload to relight the arena.');});
+const camera=new T.PerspectiveCamera(43,innerWidth/innerHeight,.1,90);camera.position.set(0,14.8,17.8);camera.lookAt(0,.1,0);
+const hemi=new T.HemisphereLight(0x91b9d6,0x483027,1.35);scene.add(hemi);
+const moon=new T.DirectionalLight(0xb1cee6,2.2);moon.position.set(-8,15,-8);moon.castShadow=true;moon.shadow.mapSize.set(2048,2048);Object.assign(moon.shadow.camera,{left:-12,right:12,top:12,bottom:-12,near:1,far:40});moon.shadow.bias=-.0005;moon.shadow.normalBias=.035;scene.add(moon);
+const warmFill=new T.DirectionalLight(0xf2b06b,.8);warmFill.position.set(7,5,9);scene.add(warmFill);
+const mat=(color,metalness=0,roughness=.8)=>new T.MeshStandardMaterial({color,metalness,roughness});
+const stone=mat(0x373c3f),darkStone=mat(0x202a30),trim=mat(0x58544a),iron=mat(0x202a30,.75,.4),gold=mat(0xa68a50,.72,.3),silver=mat(0xa5b5bb,.8,.27),black=mat(0x0b141b,.35,.6),leather=mat(0x392d29),bone=mat(0xdfcda4);
+const boxGeo=new T.BoxGeometry(1,1,1),sphereGeo=new T.SphereGeometry(1,12,8),cylGeo=new T.CylinderGeometry(1,1,1,12),up=new V(0,1,0);
+function mesh(geo,material,parent,pos,scale){const m=new T.Mesh(geo,material);if(pos)m.position.set(...pos);if(scale)m.scale.set(...scale);m.castShadow=true;m.receiveShadow=true;(parent||scene).add(m);return m;}
+function box(parent,m,x,y,z,sx,sy,sz){return mesh(boxGeo,m,parent,[x,y,z],[sx,sy,sz]);}
+function ball(parent,m,x,y,z,sx,sy=sx,sz=sx){return mesh(sphereGeo,m,parent,[x,y,z],[sx,sy,sz]);}
+function cylinder(parent,m,x,y,z,r,h){return mesh(cylGeo,m,parent,[x,y,z],[r,h,r]);}
+function ring(radius,tube,m,y,parent=scene){const a=mesh(new T.TorusGeometry(radius,tube,6,96),m,parent,[0,y,0]);a.rotation.x=Math.PI/2;return a;}
+const floor=cylinder(scene,mat(0x343a3c),0,-.20,0,10.7,.4);floor.receiveShadow=true;
+// Individually cut flagstones, with a narrow dark mortar gap.
+const tilePositions=[];for(let x=-10;x<=10;x++)for(let z=-10;z<=10;z++)if(x*x+z*z<=101)tilePositions.push([x,z]);
+const tiles=new T.InstancedMesh(boxGeo,mat(0xffffff),tilePositions.length),tileTransform=new T.Object3D();tiles.receiveShadow=true;tiles.castShadow=false;tilePositions.forEach(([x,z],i)=>{tileTransform.position.set(x,range(-.011,.004),z);tileTransform.scale.set(.96,.06,.96);tileTransform.rotation.y=range(-.012,.012);tileTransform.updateMatrix();tiles.setMatrixAt(i,tileTransform.matrix);tiles.setColorAt(i,new T.Color().setHSL(.09+rand()*.04,.06+rand()*.05,.18+rand()*.055));});scene.add(tiles);
+ring(7.9,.045,gold,.055);ring(8.13,.018,trim,.055);ring(2.55,.028,trim,.06);ring(2.7,.014,gold,.063);
+for(let i=0;i<16;i++){const a=i*TAU/16;const r=box(scene,trim,Math.sin(a)*7.6,.055,Math.cos(a)*7.6,.035,.018,.3);r.rotation.y=a;}
+// Center compass, made from slender inlaid stone bars.
+for(let i=0;i<8;i++){const a=i*Math.PI/4,b=box(scene,gold,Math.sin(a)*.9,.057,Math.cos(a)*.9,.035,.015,1.1);b.rotation.y=a;}
+ring(.35,.025,gold,.065);
+// An open gate and crenellated circular wall. Front wall is kept low for visibility.
+for(let i=0;i<56;i++){let a=i*TAU/56,x=Math.sin(a)*10,z=Math.cos(a)*10;if(z<-9.6&&Math.abs(x)<2.5)continue;const h=z>6?.85:2.6;for(let j=0;j<3;j++){const b=box(scene,j%2?darkStone:stone,x,h*(j+.5)/3,z,1.15,h/3-.035,.65);b.rotation.y=a;}if(i%2===0){const b=box(scene,trim,x,h+.23,z,.6,.48,.8);b.rotation.y=a;}}
+for(const x of [-2.65,2.65]){box(scene,stone,x,2.65,-10.1,1.1,5.3,1.3);box(scene,trim,x,5.4,-10.1,1.5,.3,1.65);for(const y of [1,3.5])box(scene,trim,x,y,-10.1,1.2,.16,1.4);}
+box(scene,stone,0,5,-10.2,4.4,1.1,1.2);box(scene,trim,0,5.6,-10.2,6.6,.2,1.5);
+for(let x=-1.8;x<=1.9;x+=.45)box(scene,iron,x,2.4,-10.4,.075,4.6,.08);
+for(const y of [1,2.5,4])box(scene,iron,0,y,-10.4,4.5,.08,.1);
+// Silhouettes beyond the ring, a broken monastery rather than an empty skybox.
+for(let i=0;i<15;i++){let a=i*TAU/15,r=range(14,19),h=range(4,10);cylinder(scene,darkStone,Math.sin(a)*r,h/2-1,Math.cos(a)*r,range(.6,1.2),h);}
+const banners=[];
+for(const side of [-1,1]){const group=new T.Group();group.position.set(side*6.6,0,-8.5);scene.add(group);cylinder(group,iron,0,2.7,0,.065,5.4);box(group,gold,0,5.05,0,1.9,.075,.08);ball(group,gold,0,5.45,0,.13);const geo=new T.PlaneGeometry(1.5,2.35,8,12);const banner=mesh(geo,mat(side<0?0x203d50:0x702e26),group,[0,3.8,.06]);banner.material.side=T.DoubleSide;banner.userData.base=Float32Array.from(geo.attributes.position.array);banners.push(banner);box(group,gold,0,3.95,.09,.045,1.2,.03);box(group,gold,0,4.2,.095,.6,.045,.03);}
+const torches=[],flameMat=new T.MeshBasicMaterial({color:0xffa33d}),coreMat=new T.MeshBasicMaterial({color:0xffe4a0});
+for(let i=0;i<8;i++){let a=(i+.5)*TAU/8,x=Math.sin(a)*8.9,z=Math.cos(a)*8.9;const group=new T.Group();group.position.set(x,0,z);scene.add(group);cylinder(group,stone,0,.15,0,.52,.3);cylinder(group,iron,0,.85,0,.12,1.4);const bowl=mesh(new T.ConeGeometry(.52,.4,10,1,true),iron,group,[0,1.6,0]);bowl.rotation.z=Math.PI;for(let n=0;n<5;n++){const b=box(group,iron,Math.sin(n*TAU/5)*.3,1.85,Math.cos(n*TAU/5)*.3,.045,.65,.045);b.rotation.z=range(-.3,.3);}const flame=mesh(new T.IcosahedronGeometry(.34,1),flameMat,group,[0,2,0],[1,1.8,1]);const core=mesh(new T.IcosahedronGeometry(.22,0),coreMat,group,[0,1.95,0],[1,1.7,1]);const light=new T.PointLight(0xffa044,29,11,2);light.position.set(x,2.35,z);if(i===1||i===6){light.castShadow=true;light.shadow.mapSize.set(512,512);light.shadow.bias=-.002;light.shadow.camera.near=.2;}scene.add(light);torches.push({flame,core,light,phase:rand()*TAU});}
+const dustCount=150,dustGeo=new T.BufferGeometry(),dustPos=new Float32Array(dustCount*3);for(let i=0;i<dustCount;i++){dustPos[i*3]=range(-12,12);dustPos[i*3+1]=range(.1,7);dustPos[i*3+2]=range(-12,12);}dustGeo.setAttribute('position',new T.BufferAttribute(dustPos,3));const dust=new T.Points(dustGeo,new T.PointsMaterial({color:0xe6a458,size:.025,transparent:true,opacity:.65,depthWrite:false}));scene.add(dust);
+// Soft fire halos are procedural shader planes, with no texture or image.
+flameMat.transparent=true;flameMat.opacity=.80;flameMat.depthWrite=false;flameMat.blending=T.AdditiveBlending;flameMat.color.set(0xff5e0b);flameMat.toneMapped=false;coreMat.color.set(0xffd253);coreMat.toneMapped=false;
+const haloMaterial=new T.ShaderMaterial({transparent:true,depthWrite:false,blending:T.AdditiveBlending,uniforms:{color:{value:new T.Color(1,.27,.035)}},vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',fragmentShader:'varying vec2 vUv; uniform vec3 color; void main(){float r=length(vUv-0.5)*2.0;float a=pow(max(0.0,1.0-r),3.0)*0.55;gl_FragColor=vec4(color,a);}'});
+for(const torch of torches){torch.halo=new T.Mesh(new T.PlaneGeometry(2.8,2.8),haloMaterial);torch.halo.position.copy(torch.light.position);scene.add(torch.halo);torch.tongues=[];for(let n=0;n<3;n++){const m=mesh(new T.ConeGeometry(.12,.62,5),flameMat,torch.flame.parent,[Math.sin(n*2.1)*.15,2.35,Math.cos(n*2.1)*.15]);m.castShadow=false;torch.tongues.push(m);}torch.flame.castShadow=false;torch.core.castShadow=false;}
+// A complete articulated knight. Hand targets drive two-bone arm IK, so
+// the blade and shield always remain attached to the character's hands.
+function makeKnight(isPlayer){
+ const root=new T.Group();scene.add(root);const rig=new T.Group();root.add(rig);const armor=mat(isPlayer?0x809ead:0x777078,.55,.40),cloth=mat(isPlayer?0x264c63:0x762f27),accent=isPlayer?silver:gold;
+ const pelvis=box(rig,iron,0,.95,0,.63,.38,.4),chest=mesh(new T.CylinderGeometry(.40,.31,.65,8),armor,rig,[0,1.43,0],[1,1,.68]);box(rig,cloth,0,1.30,.285,.38,.73,.055);box(rig,accent,0,1.48,.327,.045,.37,.02);box(rig,accent,0,1.55,.33,.21,.045,.022);box(rig,leather,0,1.08,0,.7,.10,.46);box(rig,gold,0,1.08,.25,.12,.11,.04);
+ const head=new T.Group();head.position.set(0,1.98,0);rig.add(head);ball(head,armor,0,0,0,.265,.31,.245);box(head,armor,0,-.04,.18,.46,.29,.14);box(head,black,0,.025,.257,.40,.055,.015);box(head,accent,0,-.08,.274,.045,.27,.03);for(const x of [-.13,.13])for(let y=-.16;y<-.06;y+=.05)box(head,black,x,y,.257,.06,.018,.02);const crest=box(head,cloth,0,.29,-.035,.09,.20,.39);
+ const cape=box(rig,cloth,0,1.12,-.29,.64,1.02,.065);cape.rotation.x=.15;
+ const legs=[];for(const side of [-1,1]){const hip=new T.Group();hip.position.set(side*.23,.94,0);rig.add(hip);const thigh=box(hip,armor,0,-.21,0,.25,.42,.28),knee=new T.Group();knee.position.y=-.43;hip.add(knee);ball(knee,accent,0,0,.07,.15);box(knee,armor,0,-.22,0,.22,.43,.25);box(knee,iron,0,-.40,.10,.26,.16,.43);legs.push({hip,knee});}
+ const arms=[];for(const side of [-1,1]){const shoulder=ball(rig,armor,side*.47,1.65,0,.25,.21,.26),upper=mesh(cylGeo,armor,rig,null,[.13,.4,.13]),elbow=ball(rig,iron,side*.55,1.3,0,.13),fore=mesh(cylGeo,armor,rig,null,[.115,.4,.115]),hand=ball(rig,iron,0,0,0,.13);arms.push({side,shoulder,upper,elbow,fore,hand});}
+ const sword=new T.Group();rig.add(sword);cylinder(sword,leather,0,-.11,0,.065,.30);ball(sword,accent,0,-.28,0,.08);box(sword,accent,0,.045,0,.44,.09,.11);const blade=box(sword,silver,0,.77,0,.105,1.38,.045);const tip=mesh(new T.ConeGeometry(.073,.21,4),silver,sword,[0,1.56,0]);tip.rotation.y=Math.PI/4;box(sword,accent,0,.29,.024,.025,.34,.01);
+ const shield=new T.Group();rig.add(shield);const disk=cylinder(shield,accent,0,0,0,.56,.09);disk.rotation.x=Math.PI/2;const face=cylinder(shield,cloth,0,0,.065,.50,.035);face.rotation.x=Math.PI/2;ball(shield,accent,0,0,.12,.15,.15,.08);box(shield,accent,0,0,.096,.055,.88,.035);box(shield,accent,0,0,.098,.88,.055,.035);for(let i=0;i<10;i++)ball(shield,gold,Math.sin(i*TAU/10)*.46,Math.cos(i*TAU/10)*.46,.1,.025);
+ const aura=ring(.64,.018,new T.MeshBasicMaterial({color:isPlayer?0x7acde1:0xe78b60,transparent:true,opacity:.65}),.08,root);
+ const trailGeo=new T.BufferGeometry();trailGeo.setAttribute('position',new T.BufferAttribute(new Float32Array(18),3));const trail=mesh(trailGeo,new T.MeshBasicMaterial({color:isPlayer?0xb9e4f3:0xffbb77,transparent:true,opacity:.22,side:T.DoubleSide,depthWrite:false}),scene);trail.frustumCulled=false;trail.visible=false;
+ return {isPlayer,root,rig,pelvis,chest,head,cape,crest,legs,arms,sword,shield,aura,trail,hp:100,sp:100,angle:0,state:'idle',timer:0,attack:null,guardAge:9,guardCooldown:0,regenDelay:0,invulnerable:0,move:new V(),velocity:new V(),knock:new V(),walk:0,sway:0,bladeA:new V(),bladeB:new V(),prevA:new V(),prevB:new V(),guardMatrix:new T.Matrix4(),deadTime:0,wins:0,hitFlash:0,ai:{think:0,commit:0,mode:'measure',strafe:1,bait:0,memory:[],seen:null,lastAttack:0}};
+}
+const player=makeKnight(true),enemy=makeKnight(false),fighters=[player,enemy];
+let mode='title',time=0,visualTime=0,round=1,roundDelay=0,freeze=0,shake=0,flash=0,messageTime=0,pausedFrom='fight',difficulty=1,muted=false;
+let stats={hits:0,parries:0,dodges:0},audio=null,master=null;
+const keys=new Set(),mouse=new T.Vector2(0,0),aimPoint=new V(0,0,-3),raycaster=new T.Raycaster(),ground=new T.Plane(new V(0,1,0),0);let mouseSeen=false,queuedAttack=null,queueAge=0,accumulator=0;
+const attacks={light:{wind:.23,active:.23,recover:.35,cost:18,damage:17,guard:19},heavy:{wind:.64,active:.31,recover:.78,cost:34,damage:32,guard:43}};
+function initAudio(){if(audio)return;try{audio=new(window.AudioContext||window.webkitAudioContext)();master=audio.createGain();master.gain.value=muted?0:.28;master.connect(audio.destination);}catch(e){}}
+function sound(kind){if(!audio||muted)return;if(audio.state==='suspended')audio.resume();const t=audio.currentTime,g=audio.createGain();g.connect(master);const osc=audio.createOscillator();osc.connect(g);let f=kind==='parry'?1100:kind==='clash'?650:kind==='hit'?105:kind==='heavy'?130:kind==='dodge'?180:kind==='win'?440:280;osc.type=['hit','heavy'].includes(kind)?'triangle':'sine';osc.frequency.setValueAtTime(f,t);osc.frequency.exponentialRampToValueAtTime(kind==='parry'?1900:Math.max(40,f*.28),t+.17);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(kind==='hit'?.8:.45,t+.005);g.gain.exponentialRampToValueAtTime(.0001,t+.28);osc.start(t);osc.stop(t+.3);
+ if(['hit','clash','parry','heavy','light'].includes(kind)){const len=Math.floor(audio.sampleRate*.16),buf=audio.createBuffer(1,len,audio.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);const n=audio.createBufferSource(),filter=audio.createBiquadFilter(),ng=audio.createGain();n.buffer=buf;filter.type='highpass';filter.frequency.value=kind==='hit'?120:2000;ng.gain.value=kind==='light'?.08:.28;n.connect(filter);filter.connect(ng);ng.connect(master);n.start();}
+}
+const particles=[],particleGeo=new T.IcosahedronGeometry(.025,0),sparkMaterials=[new T.MeshBasicMaterial({color:0xffdb91}),new T.MeshBasicMaterial({color:0xff873b}),new T.MeshBasicMaterial({color:0xc9edff})];
+function sparks(pos,count=18,cold=false){for(let i=0;i<count;i++){if(particles.length>160){const old=particles.shift();scene.remove(old.mesh);}const m=mesh(particleGeo,sparkMaterials[cold?2:i%2],scene);m.position.copy(pos);m.castShadow=false;m.receiveShadow=false;const v=new V(range(-3,3),range(1,4.5),range(-3,3));particles.push({mesh:m,v,life:range(.2,.65)});}}
+function announce(title,sub='',duration=1.3){$('message').replaceChildren();$('message').appendChild(document.createTextNode(title));if(sub){const s=document.createElement('small');s.textContent=sub;$('message').appendChild(s);}$('message').classList.add('visible');messageTime=duration;}
+function spend(f,n){f.sp=Math.max(0,f.sp-n);f.regenDelay=.8;}
+function angleDiff(a,b){return Math.atan2(Math.sin(a-b),Math.cos(a-b));}
+function faceToward(f,target,dt,speed=8){const d=angleDiff(target,f.angle);f.angle+=clamp(d,-speed*dt,speed*dt);f.root.rotation.y=f.angle;}
+function ready(f){return f.hp>0&&f.state==='idle';}
+function beginAttack(f,type){const def=attacks[type];if(!ready(f)||f.sp<def.cost)return false;spend(f,def.cost);f.state='attack';f.timer=0;f.attack={type,...def,connected:false,sounded:false,serial:time};f.guardAge=9;if(f.isPlayer)enemy.ai.lastAttack=time;return true;}
+function setGuard(f,on){if(on&&ready(f)&&f.guardCooldown<=0&&f.sp>7){f.state='guard';f.timer=0;f.guardAge=0;spend(f,5);}else if(!on&&f.state==='guard'){f.state='idle';f.guardCooldown=.22;f.guardAge=9;}}
+function dodge(f,dir){if(!['idle','guard'].includes(f.state)||f.sp<25)return false;spend(f,25);f.state='dodge';f.timer=0;f.guardAge=9;f.move.copy(dir);if(f.move.lengthSq()<.01)f.move.set(-Math.sin(f.angle),0,-Math.cos(f.angle));f.move.normalize();f.invulnerable=.30;sound('dodge');if(f.isPlayer)stats.dodges++;return true;}
+function stagger(f,duration){if(f.hp<=0)return;f.state='stagger';f.timer=duration;f.attack=null;f.guardAge=9;f.guardCooldown=.25;}
+function resetFighter(f){f.hp=100;f.sp=100;f.state='idle';f.timer=0;f.attack=null;f.guardAge=9;f.guardCooldown=0;f.regenDelay=0;f.invulnerable=0;f.knock.set(0,0,0);f.move.set(0,0,0);f.velocity.set(0,0,0);f.deadTime=0;f.walk=0;f.hitFlash=0;f.root.position.set(f.isPlayer?-1.1:1.1,0,f.isPlayer?3.1:-3.1);f.angle=f.isPlayer?Math.PI:0;f.root.rotation.set(0,f.angle,0);f.rig.position.set(0,0,0);f.rig.rotation.set(0,0,0);f.sword.visible=true;f.aura.visible=true;f.ai={think:0,commit:0,mode:'measure',strafe:rand()<.5?-1:1,bait:0,memory:[],seen:null,lastAttack:0};pose(f,0);getBlade(f);f.prevA.copy(f.bladeA);f.prevB.copy(f.bladeB);}
+function startRound(){fighters.forEach(resetFighter);mode='countdown';roundDelay=2.1;freeze=0;shake=0;queuedAttack=null;keys.clear();aimPoint.copy(enemy.root.position);mouseSeen=false;announce('ROUND '+['','I','II','III','IV','V'][round],'FIND YOUR DISTANCE',1.8);updateScore();}
+function startMatch(){difficulty=Number($('difficulty').value);fighters.forEach(f=>f.wins=0);round=1;stats={hits:0,parries:0,dodges:0};time=0;initAudio();if(audio)audio.resume();$('menu').hidden=true;$('result').hidden=true;$('pause').hidden=true;$('hud').hidden=false;$('reticle').style.display='block';startRound();renderer.domElement.focus();}
+function updateScore(){const el=$('score');el.replaceChildren();for(let i=0;i<7;i++){const node=document.createElement(i===3?'em':'i');if(i===3)node.textContent=' / ';else if(i<3?i<player.wins:i-4<enemy.wins)node.className='won';el.appendChild(node);}$('roundLabel').textContent='ROUND '+['','I','II','III','IV','V'][round];}
+function finishRound(){if(mode!=='fight')return;const winner=player.hp>0?player:enemy;if(player.hp<=0&&enemy.hp<=0){announce('BOTH FALL','THE OATH REMAINS',2.5);roundDelay=3.5;mode='roundover';return;}winner.wins++;updateScore();announce(winner.isPlayer?'ROUND WON':'ROUND LOST',winner.isPlayer?'THE FLAME FALTERS':'RISE. LEARN. RETURN.',2.6);roundDelay=3.4;mode='roundover';sound(winner.isPlayer?'win':'heavy');}
+function showResult(){mode='result';const won=player.wins>=3;$('resultEyebrow').textContent=won?'THE OATH IS BROKEN':'THE FIRE STILL BURNS';$('resultTitle').textContent=won?'The ring is yours.':'The Warden remains.';$('resultCopy').textContent=won?'Steel has answered steel. The last flame belongs to you.':'A missed heavy is an invitation. Draw his swing, step aside, then answer.';$('stats').innerHTML='<span><b>'+player.wins+' : '+enemy.wins+'</b>ROUNDS</span><span><b>'+stats.hits+'</b>HITS</span><span><b>'+stats.parries+'</b>PARRIES</span>';$('result').hidden=false;$('reticle').style.display='none';$('restart').focus();}
+function pauseGame(){if(!['fight','countdown','roundover'].includes(mode))return;pausedFrom=mode;mode='paused';keys.clear();queuedAttack=null;setGuard(player,false);$('pause').hidden=false;$('reticle').style.display='none';}
+function resumeGame(){if(mode!=='paused')return;mode=pausedFrom;$('pause').hidden=true;$('reticle').style.display='block';accumulator=0;renderer.domElement.focus();}
+function toTitle(){mode='title';keys.clear();queuedAttack=null;fighters.forEach(resetFighter);$('menu').hidden=false;$('hud').hidden=true;$('pause').hidden=true;$('result').hidden=true;$('reticle').style.display='none';}
+
+// Procedural posing: the same scene graph feeds rendering AND collision.
+function link(mesh,a,b,r){mesh.position.copy(a).add(b).multiplyScalar(.5);const d=b.clone().sub(a);mesh.quaternion.setFromUnitVectors(up,d.clone().normalize());mesh.scale.set(r,d.length(),r);}
+function armIK(arm,hand){const shoulder=arm.shoulder.position,delta=hand.clone().sub(shoulder),distance=clamp(delta.length(),.08,.98),dir=delta.normalize(),l1=.51,l2=.50;const along=(l1*l1-l2*l2+distance*distance)/(2*distance),height=Math.sqrt(Math.max(0,l1*l1-along*along));const bend=new V(arm.side*.4,-1,-.5);bend.addScaledVector(dir,-bend.dot(dir)).normalize();const elbow=shoulder.clone().addScaledVector(dir,along).addScaledVector(bend,height);arm.elbow.position.copy(elbow);arm.hand.position.copy(hand);link(arm.upper,shoulder,elbow,.13);link(arm.fore,elbow,hand,.115);}
+function attackPhase(f){if(!f.attack)return 'none';return f.timer<f.attack.wind?'wind':f.timer<f.attack.wind+f.attack.active?'active':'recover';}
+function pose(f,dt){
+ const moving=f.velocity.length(),stride=Math.sin(f.walk),idle=Math.sin(visualTime*2.2+(f.isPlayer?0:2));let bodyLean=0,hand=new V(.57,1.25,.27),dir=new V(.25,.92,.3).normalize();
+ f.rig.position.y=idle*.014+Math.abs(stride)*Math.min(moving*.009,.045);f.rig.rotation.set(0,0,0);f.head.rotation.y=Math.sin(visualTime*.7)*.025;f.cape.rotation.x=.16+Math.min(moving*.05,.3)+Math.sin(visualTime*4)*.045;
+ const guarding=f.state==='guard';f.shield.position.set(guarding?-.08:-.63,guarding?1.37:1.1,guarding?.68:.12);f.shield.rotation.set(guarding?0:.15,guarding?-.03:-.65,guarding?0:-.15);
+ if(f.state==='attack'&&f.attack){const a=f.attack,phase=attackPhase(f);let p,theta;
+  if(a.type==='light'){
+   if(phase==='wind'){p=smooth(clamp(f.timer/a.wind,0,1));theta=mix(.55,1.65,p);}
+   else if(phase==='active'){p=smooth(clamp((f.timer-a.wind)/a.active,0,1));theta=mix(1.65,-1.5,p);}
+   else{p=smooth(clamp((f.timer-a.wind-a.active)/a.recover,0,1));theta=mix(-1.5,.55,p);}
+   hand.set(.28+Math.sin(theta)*.37,1.35+Math.cos(theta)*.09,.22+Math.cos(theta)*.34);dir.set(Math.sin(theta),.08,Math.cos(theta)).normalize();
+   if(phase==='recover')dir.lerp(new V(.25,.92,.3),p).normalize();bodyLean=phase==='active'?.09:0;f.rig.rotation.y=clamp(theta*.12,-.17,.17);
+  }else{
+   if(phase==='wind'){p=smooth(clamp(f.timer/a.wind,0,1));theta=mix(.6,-.55,p);}
+   else if(phase==='active'){p=smooth(clamp((f.timer-a.wind)/a.active,0,1));theta=mix(-.55,2.65,p);}
+   else{p=smooth(clamp((f.timer-a.wind-a.active)/a.recover,0,1));theta=mix(2.65,.6,p);}
+   hand.set(.17,1.52+Math.cos(theta)*.17,.34+Math.sin(theta)*.23);dir.set(.06,Math.cos(theta),Math.sin(theta)).normalize();bodyLean=phase==='active'?.2:0;
+  }
+ }else if(guarding){hand.set(.43,1.42,.43);dir.set(-.50,.7,.48).normalize();}
+ else if(f.state==='feint'){const p=Math.sin(clamp(f.timer/.5,0,1)*Math.PI);hand.set(.3,1.45+p*.23,.3);dir.set(.08,1,-p*.3).normalize();}
+ else if(f.state==='stagger'){hand.set(.7,1.08,.05);dir.set(.85,.3,-.3).normalize();f.rig.rotation.z=Math.sin(f.timer*24)*.08;bodyLean=-.16;}
+ else if(f.state==='dodge'){bodyLean=.44;f.rig.position.y-=Math.sin(clamp(f.timer/.43,0,1)*Math.PI)*.23;hand.set(.55,1.1,.25);dir.set(.5,.3,-.8).normalize();}
+ f.rig.rotation.x=bodyLean;
+ for(let i=0;i<2;i++){const l=f.legs[i],phase=i?stride:-stride;l.hip.rotation.x=phase*Math.min(moving*.16,.6);l.knee.rotation.x=Math.max(0,-phase)*Math.min(moving*.22,.7);}
+ f.sword.position.copy(hand);f.sword.quaternion.setFromUnitVectors(up,dir);armIK(f.arms[1],hand);armIK(f.arms[0],f.shield.position.clone().add(new V(0,0,-.10)));
+ if(f.state==='dead'){
+  const q=clamp(f.deadTime/1.05,0,1),fall=smooth(q);f.rig.rotation.x=-fall*1.50;f.rig.rotation.z=Math.sin(q*Math.PI)*.18+fall*.12;f.rig.position.y=.22*fall+Math.sin(q*Math.PI)*.08;
+  f.head.rotation.z=Math.sin(f.deadTime*8)*Math.exp(-f.deadTime*3)*.25;
+  for(let i=0;i<2;i++){f.legs[i].hip.rotation.x=.35*fall+(i?1:-1)*Math.sin(f.deadTime*9)*Math.exp(-f.deadTime*2)*.25;f.legs[i].hip.rotation.z=(i?1:-1)*.19*fall;f.legs[i].knee.rotation.x=.25*fall;}
+  const limp=new V(.72,1.0,.05);f.sword.position.copy(limp);f.sword.quaternion.setFromUnitVectors(up,new V(.7,-.5,-.3).normalize());armIK(f.arms[1],limp);f.shield.rotation.y=-1.0*fall;f.aura.visible=false;
+ }else for(const l of f.legs)l.hip.rotation.z=0;
+ f.root.updateMatrixWorld(true);
+}
+function getBlade(f){f.bladeA.set(0,.15,0).applyMatrix4(f.sword.matrixWorld);f.bladeB.set(0,1.67,0).applyMatrix4(f.sword.matrixWorld);f.guardMatrix.copy(f.shield.matrixWorld).invert();}
+// Closest points on two finite 3D segments. Handles degenerate segments.
+function segmentDistance(a,b,c,d){const u=b.clone().sub(a),v=d.clone().sub(c),w=a.clone().sub(c),aa=u.dot(u),bb=u.dot(v),cc=v.dot(v),dd=u.dot(w),ee=v.dot(w);let s=0,t=0;if(aa<1e-9&&cc<1e-9)return {distance:a.distanceTo(c),point:a.clone()};if(aa<1e-9)t=clamp(ee/cc,0,1);else if(cc<1e-9)s=clamp(-dd/aa,0,1);else{const den=aa*cc-bb*bb;s=den>1e-9?clamp((bb*ee-cc*dd)/den,0,1):0;t=(bb*s+ee)/cc;if(t<0){t=0;s=clamp(-dd/aa,0,1);}else if(t>1){t=1;s=clamp((bb-dd)/aa,0,1);}}const p=a.clone().addScaledVector(u,s),q=c.clone().addScaledVector(v,t);return {distance:p.distanceTo(q),point:p.add(q).multiplyScalar(.5)};}
+function bodyCapsules(f){const transform=(x,y,z)=>new V(x,y,z).applyMatrix4(f.rig.matrixWorld);return [[transform(0,.85,0),transform(0,1.62,0),.35],[transform(0,1.92,0),transform(0,2.06,0),.255],...f.legs.map(l=>[l.hip.getWorldPosition(new V()),l.knee.localToWorld(new V(0,-.25,0)),.18])];}
+function shieldContact(a,b,f){const x=a.clone().applyMatrix4(f.guardMatrix),y=b.clone().applyMatrix4(f.guardMatrix),dz=y.z-x.z;let t;if(Math.abs(dz)<1e-7){if(Math.abs(x.z)>.10)return null;const xy=new V(y.x-x.x,y.y-x.y,0),den=xy.lengthSq();t=den?clamp(-(x.x*xy.x+x.y*xy.y)/den,0,1):0;}else{t=(.07-x.z)/dz;if(t<0||t>1)return null;}const p=x.clone().lerp(y,t);return p.x*p.x+p.y*p.y<=.59*.59?a.clone().lerp(b,t):null;}
+// Adaptive temporal samples of the swept blade.
+// At 120Hz the angular sweep is small; sampling every <= 5cm prevents
+// tunneling even on the fast light cut. All volumes come from live bones.
+function sweep(f,other){const travel=Math.max(f.prevA.distanceTo(f.bladeA),f.prevB.distanceTo(f.bladeB)),n=Math.max(1,Math.ceil(travel/.05)),caps=bodyCapsules(other);for(let i=0;i<=n;i++){const t=i/n,a=f.prevA.clone().lerp(f.bladeA,t),b=f.prevB.clone().lerp(f.bladeB,t);if(other.state==='guard'&&new V(0,0,1).transformDirection(other.shield.matrixWorld).dot(f.root.position.clone().sub(other.root.position))>0){const p=shieldContact(a,b,other);if(p)return {kind:'guard',point:p};}
+  if(other.state==='attack'&&attackPhase(other)==='active'){const hit=segmentDistance(a,b,other.prevA.clone().lerp(other.bladeA,t),other.prevB.clone().lerp(other.bladeB,t));if(hit.distance<.10)return {kind:'clash',point:hit.point};}
+  for(const [c,d,r] of caps){const hit=segmentDistance(a,b,c,d);if(hit.distance<r+.055)return {kind:'body',point:hit.point};}
+ }return null;}
+function resolveStrike(f,other){if(f.state!=='attack'||!f.attack||f.attack.connected||attackPhase(f)!=='active'||other.hp<=0||other.invulnerable>0)return;const hit=sweep(f,other);if(!hit)return;const attack=f.attack;attack.connected=true;
+ if(hit.kind==='guard'){
+  const parry=other.guardAge<=.18&&other.sp>=5;
+  if(parry){spend(other,4);other.sp=Math.min(100,other.sp+12);stagger(f,1.0);freeze=.095;shake=.17;sparks(hit.point,34,true);sound('parry');announce(other.isPlayer?'PARRY':'PARRIED',other.isPlayer?'THE OPENING IS YOURS':'YOUR BLADE IS TURNED',1);if(other.isPlayer)stats.parries++;}
+  else{spend(other,attack.guard);sparks(hit.point,21);freeze=.045;shake=.07;sound('clash');if(other.sp<=0){stagger(other,1.1);announce('GUARD BROKEN',other.isPlayer?'GET CLEAR':'STRIKE NOW',1.1);shake=.15;}else{f.state='attack';f.timer=attack.wind+attack.active;}}
+ }else if(hit.kind==='clash'){
+  if(other.attack)other.attack.connected=true;stagger(f,.35);stagger(other,.35);freeze=.065;shake=.1;sparks(hit.point,24);sound('clash');announce('STEEL ON STEEL','',.65);
+ }else{
+  other.hp=Math.max(0,other.hp-attack.damage);other.regenDelay=1.0;const push=other.root.position.clone().sub(f.root.position).setY(0).normalize();other.knock.addScaledVector(push,attack.type==='heavy'?3.6:1.8);freeze=attack.type==='heavy'?.085:.055;shake=attack.type==='heavy'?.17:.09;sparks(hit.point,attack.type==='heavy'?24:15);sound('hit');if(f.isPlayer)stats.hits++;else flash=.48;
+  if(other.hp<=0){other.state='dead';other.timer=0;other.deadTime=0;other.attack=null;other.knock.addScaledVector(push,1.4);freeze=.12;shake=.21;finishRound();}
+  else stagger(other,attack.type==='heavy'?.56:.30);
+ }
+}
+function updateTrail(f){const active=f.state==='attack'&&attackPhase(f)==='active';f.trail.visible=active;if(!active)return;const pos=f.trail.geometry.attributes.position;const vertices=[f.prevA,f.prevB,f.bladeB,f.prevA,f.bladeB,f.bladeA];for(let i=0;i<6;i++)pos.setXYZ(i,vertices[i].x,vertices[i].y,vertices[i].z);pos.needsUpdate=true;}
+function playerInput(dt){
+ const dir=new V((keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),0,(keys.has('KeyS')?1:0)-(keys.has('KeyW')?1:0));if(dir.lengthSq()>0)dir.normalize();
+ if(player.state!=='dodge')player.move.copy(dir);
+ if(keys.has('Space'))setGuard(player,true);else setGuard(player,false);
+ if(queuedAttack){queueAge-=dt;if(ready(player)&&!keys.has('Space')){beginAttack(player,queuedAttack);queuedAttack=null;}else if(queueAge<=0)queuedAttack=null;}
+ if(mouseSeen){raycaster.setFromCamera(mouse,camera);raycaster.ray.intersectPlane(ground,aimPoint);}else aimPoint.copy(enemy.root.position);
+ const dx=aimPoint.x-player.root.position.x,dz=aimPoint.z-player.root.position.z;
+ if(dx*dx+dz*dz>.04&&player.state!=='dead'&&player.state!=='dodge'&&player.state!=='stagger'){const target=Math.atan2(dx,dz);faceToward(player,target,dt,player.state==='attack'?(attackPhase(player)==='wind'?2.8:.30):11);}
+}
+// Reaction-delayed perception: AI only sees recorded world state, never
+// keyboard/mouse intent. Its tactics still use distance, as a human would.
+function observePlayer(){return {at:time,pos:player.root.position.clone(),angle:player.angle,state:player.state,sp:player.sp,type:player.attack?.type,phase:attackPhase(player),connected:player.attack?.connected,serial:player.attack?.serial};}
+function thinkAI(dt){
+ const f=enemy,a=f.ai;a.memory.push(observePlayer());const latency=[.30,.22,.15][difficulty];while(a.memory.length>1&&a.memory[1].at<=time-latency)a.memory.shift();const seen=a.memory[0];a.seen=seen;
+ if(!['idle','guard','attack','feint'].includes(f.state))return;
+ const delta=seen.pos.clone().sub(f.root.position).setY(0),distance=delta.length(),toward=delta.normalize(),angle=Math.atan2(toward.x,toward.z),side=new V(toward.z,0,-toward.x).multiplyScalar(a.strafe);
+ if(f.state!=='attack'||attackPhase(f)==='wind')faceToward(f,angle,dt,f.state==='attack'?2.4:6.5);
+ if(f.state==='attack'){f.move.copy(toward).multiplyScalar(attackPhase(f)==='wind'&&distance>1.65?.5:0);return;}
+ if(f.state==='feint'){f.move.copy(toward).multiplyScalar(-.25);return;}
+ a.think-=dt;a.commit-=dt;a.bait-=dt;f.move.set(0,0,0);
+ if(f.state==='guard'){if(seen.state!=='attack'&&a.commit<=0)setGuard(f,false);else{f.move.copy(side).multiplyScalar(.15);return;}}
+ if(!ready(f))return;
+ // A missed heavy exposes a long recovery. Commit to closing that opening.
+ if(seen.type==='heavy'&&seen.phase==='recover'&&!seen.connected&&seen.serial!==a.punished){a.mode='punish';a.commit=.8;a.punished=seen.serial;}
+ if(a.mode==='punish'&&a.commit>0){f.move.copy(toward).multiplyScalar(1.35);if(distance<2.35&&f.sp>=18){beginAttack(f,'light');a.mode='measure';}return;}
+ // Recognize a wind-up. Backstep slow heavies, occasionally catch a light.
+ if(seen.state==='attack'&&distance<3.1&&seen.phase!=='recover'){
+  if(seen.type==='heavy'){a.mode='bait';f.move.copy(toward).multiplyScalar(-1.05);if(distance<1.7&&f.sp>=25&&a.think<=0){dodge(f,toward.clone().negate().addScaledVector(side,.6));a.think=.5;}return;}
+  if(a.think<=0&&distance<2.65){a.think=.28;if(f.sp>25&&rand()<[.3,.60,.78][difficulty]){setGuard(f,true);a.commit=.4;a.mode='guard';return;}}
+ }
+ if(f.sp<30){a.mode='recover';f.move.copy(toward).multiplyScalar(-.75).addScaledVector(side,.35);return;}
+ if(a.mode==='bait'&&a.bait>0){f.move.copy(toward).multiplyScalar(a.bait>.95?-.7:.08).addScaledVector(side,.22);return;}
+ if(distance>2.55){a.mode='measure';f.move.copy(toward).multiplyScalar(.85).addScaledVector(side,.18);return;}
+ if(distance<1.6){f.move.copy(toward).multiplyScalar(-.6);return;}
+ f.move.copy(side).multiplyScalar(.43).addScaledVector(toward,distance>2.3?.16:-.08);
+ if(a.think>0)return;
+ a.think=range(.33,.65)+[.25,.08,0][difficulty];
+ if(seen.state==='guard'){
+  if(rand()<.62){a.mode='pressure';beginAttack(f,'heavy');}else{a.mode='feint';f.state='feint';f.timer=0;spend(f,8);}return;
+ }
+ const roll=rand();
+ if(roll<.17&&a.bait<=0){a.mode='bait';a.bait=1.5;a.think=.5;f.move.copy(toward).multiplyScalar(-.8);}
+ else if(roll<.30&&difficulty>0){a.mode='feint';f.state='feint';f.timer=0;spend(f,8);}
+ else if(roll<.86){a.mode='attack';beginAttack(f,rand()<.29?'heavy':'light');}
+ else{a.strafe*=-1;a.mode='measure';}
+}
+function advanceFighter(f,dt){
+ f.guardCooldown=Math.max(0,f.guardCooldown-dt);f.regenDelay=Math.max(0,f.regenDelay-dt);f.invulnerable=Math.max(0,f.invulnerable-dt);
+ if(f.hp>0&&f.regenDelay<=0&&['idle','stagger'].includes(f.state))f.sp=Math.min(100,f.sp+25*dt);
+ if(f.state==='guard'){f.guardAge+=dt;f.sp=Math.max(0,f.sp-dt*4);if(f.sp<=0){stagger(f,.8);if(f.isPlayer)announce('GUARD EXHAUSTED','LET YOUR STAMINA RECOVER',1);}}
+ if(f.state==='attack'){f.timer+=dt;const a=f.attack;if(f.timer>=a.wind&&!a.sounded){sound(a.type);a.sounded=true;}if(f.timer>=a.wind+a.active+a.recover){f.state='idle';f.attack=null;f.timer=0;}}
+ else if(f.state==='stagger'){f.timer-=dt;if(f.timer<=0)f.state='idle';}
+ else if(f.state==='feint'){f.timer+=dt;if(f.timer>.48){f.state='idle';f.ai.think=.12;f.ai.mode='measure';}}
+ else if(f.state==='dodge'){f.timer+=dt;if(f.timer>=.43){f.state='idle';f.move.set(0,0,0);}}
+ else if(f.state==='dead'){f.deadTime+=dt;}
+ const speed=f.state==='dodge'?7.5*Math.sin(Math.PI*clamp(f.timer/.43,0,1))+.4:f.state==='idle'?3.2:f.state==='guard'?1.7:f.state==='attack'?(attackPhase(f)==='wind'?1.1:.25):0;
+ f.velocity.copy(f.move).multiplyScalar(speed);f.root.position.addScaledVector(f.velocity,dt).addScaledVector(f.knock,dt);f.knock.multiplyScalar(Math.exp(-7*dt));
+ const radial=Math.hypot(f.root.position.x,f.root.position.z);if(radial>7.55){f.root.position.x*=7.55/radial;f.root.position.z*=7.55/radial;if(!f.isPlayer)f.ai.strafe*=-1;}
+ f.walk+=f.velocity.length()*dt*2.3;
+}
+function separateBodies(){if(player.hp<=0||enemy.hp<=0)return;const d=player.root.position.clone().sub(enemy.root.position).setY(0),len=d.length();if(len<.90){if(len<.001)d.set(1,0,0);else d.divideScalar(len);const push=(.90-len)*.5;player.root.position.addScaledVector(d,push);enemy.root.position.addScaledVector(d,-push);}}
+function tick(dt){
+ time+=dt;
+ if(mode==='fight'){playerInput(dt);thinkAI(dt);}
+ for(const f of fighters){f.prevA.copy(f.bladeA);f.prevB.copy(f.bladeB);if(mode==='fight'||mode==='roundover')advanceFighter(f,dt);else f.velocity.set(0,0,0);}
+ separateBodies();for(const f of fighters){pose(f,dt);getBlade(f);updateTrail(f);}
+ if(mode==='fight'){resolveStrike(player,enemy);if(mode==='fight')resolveStrike(enemy,player);}
+ if(mode==='countdown'){roundDelay-=dt;if(roundDelay<=0){mode='fight';announce('DUEL','',.65);sound('clash');}}
+ if(mode==='roundover'){roundDelay-=dt;if(roundDelay<=0){if(player.wins>=3||enemy.wins>=3)showResult();else{if(player.hp>0||enemy.hp>0)round++;startRound();}}}
+}
+function updateHUD(){for(const [prefix,f] of [['p',player],['e',enemy]]){$(prefix+'HP').style.width=f.hp+'%';$(prefix+'SP').style.width=f.sp+'%';$(prefix+'HPText').textContent=Math.ceil(f.hp);$(prefix+'Health').setAttribute('aria-valuenow',Math.ceil(f.hp));$(prefix+'Stamina').setAttribute('aria-valuenow',Math.ceil(f.sp));}
+ const labels={idle:player.sp<25?'RECOVER YOUR BREATH':'READY',attack:player.attack?.type==='heavy'?'HEAVY · '+attackPhase(player).toUpperCase():'LIGHT · '+attackPhase(player).toUpperCase(),guard:player.guardAge<.18?'PARRY WINDOW':'GUARDING',dodge:'EVADING',stagger:'STAGGERED',dead:'FALLEN'};$('stance').textContent=labels[player.state]||'READY';
+ const eLabels={idle:enemy.ai.mode==='bait'?'Inviting your blade':enemy.ai.mode==='punish'?'Closing the opening':enemy.ai.mode==='recover'?'Catching his breath':'Measuring you',attack:enemy.attack?.type==='heavy'?'A heavy blow':'A quick cut',guard:'Behind his shield',feint:'A false opening',dodge:'Slipping away',stagger:'Off balance',dead:'The oath is broken'};$('eStance').textContent=eLabels[enemy.state]||'Measuring you';
+}
+const camTarget=new V(),camPos=new V();
+function renderFrame(dt){
+ visualTime+=dt;
+ for(const torch of torches){const f=1+Math.sin(visualTime*12+torch.phase)*.09+Math.sin(visualTime*23+torch.phase)*.07;torch.flame.scale.set(.88+f*.12,1.6*f,.88+f*.12);torch.flame.rotation.y+=dt;torch.core.scale.y=1.5*f;torch.light.intensity=27*f;torch.halo.quaternion.copy(camera.quaternion);torch.halo.scale.setScalar(f);for(let n=0;n<torch.tongues.length;n++){const tongue=torch.tongues[n];tongue.scale.y=.8+Math.sin(visualTime*15+n*2+torch.phase)*.3;tongue.rotation.z=Math.sin(visualTime*8+n)*.2;}}
+ for(const b of banners){const p=b.geometry.attributes.position,base=b.userData.base;for(let i=0;i<p.count;i++){const y=base[i*3+1];p.setZ(i,Math.sin(base[i*3]*3+visualTime*2.8+y*2)*.10*(1.2-y));}p.needsUpdate=true;b.geometry.computeVertexNormals();}
+ for(let i=0;i<dustCount;i++){dustPos[i*3+1]+=dt*.13;if(dustPos[i*3+1]>7)dustPos[i*3+1]=.1;}dustGeo.attributes.position.needsUpdate=true;
+ for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;p.v.y-=9*dt;p.mesh.position.addScaledVector(p.v,dt);p.mesh.scale.setScalar(Math.min(1,p.life*5));if(p.mesh.position.y<.07){p.mesh.position.y=.07;p.v.y=Math.abs(p.v.y)*.25;p.v.x*=.8;p.v.z*=.8;}if(p.life<=0){scene.remove(p.mesh);particles.splice(i,1);}}
+ if(mode==='title'){camPos.set(11.6,10.6,15.8);camTarget.set(-.8,.55,-1.2);}else{const mid=player.root.position.clone().add(enemy.root.position).multiplyScalar(.5);camTarget.set(mid.x*.38,.35,mid.z*.3);const separation=player.root.position.distanceTo(enemy.root.position),height=13+Math.max(0,separation-5)*.2;camPos.set(camTarget.x,height,17+camTarget.z);}
+ camera.position.lerp(camPos,1-Math.exp(-dt*3));const aspect=innerWidth/innerHeight;camera.fov=aspect<1.1?55:43;camera.updateProjectionMatrix();camera.lookAt(camTarget);
+ if(shake>0&&mode!=='paused'){camera.position.x+=(rand()-.5)*shake;camera.position.y+=(rand()-.5)*shake;shake=Math.max(0,shake-dt*.7);}
+ if(messageTime>0&&mode!=='paused'){messageTime-=dt;if(messageTime<=0)$('message').classList.remove('visible');}
+ flash=Math.max(0,flash-dt*1.8);$('flash').style.opacity=flash;renderer.render(scene,camera);
+}
+function handleAttack(type){if(mode!=='fight')return;queuedAttack=type;queueAge=.22;}
+renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
+renderer.domElement.addEventListener('pointerdown',e=>{if(e.button===0||e.button===2){e.preventDefault();handleAttack(e.button===0?'light':'heavy');renderer.domElement.focus();}});
+window.addEventListener('pointermove',e=>{mouse.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);mouseSeen=true;$('reticle').style.left=e.clientX+'px';$('reticle').style.top=e.clientY+'px';});
+window.addEventListener('keydown',e=>{
+ const control=['KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight','KeyJ','KeyK','Escape','KeyM'];if(!control.includes(e.code))return;if(['fight','countdown','roundover','paused'].includes(mode))e.preventDefault();if(e.repeat)return;
+ if(e.code==='Escape'){if(mode==='paused')resumeGame();else pauseGame();return;}if(e.code==='KeyM'){toggleSound();return;}if(mode!=='fight')return;keys.add(e.code);
+ if(e.code==='KeyJ')handleAttack('light');if(e.code==='KeyK')handleAttack('heavy');
+ if(e.code==='ShiftLeft'||e.code==='ShiftRight'){const d=new V((keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),0,(keys.has('KeyS')?1:0)-(keys.has('KeyW')?1:0));dodge(player,d);}
+});
+window.addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='Space')setGuard(player,false);});
+window.addEventListener('blur',()=>pauseGame());document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame();});
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));});
+function toggleSound(){muted=!muted;if(master)master.gain.value=muted?0:.28;$('sound').textContent='Sound: '+(muted?'off':'on');}
+$('start').onclick=startMatch;$('restart').onclick=startMatch;$('back').onclick=toTitle;$('abandon').onclick=toTitle;$('resume').onclick=resumeGame;$('sound').onclick=toggleSound;
+fighters.forEach(resetFighter);camera.position.set(11.6,10.6,15.8);camera.lookAt(-.8,.55,-1.2);$('start').disabled=false;$('start').textContent='ENTER THE RING';
+let last=performance.now();
+function frame(now){const elapsed=Math.min((now-last)/1000,.05);last=now;try{if(mode!=='paused'&&mode!=='result'){if(freeze>0){freeze=Math.max(0,freeze-elapsed);accumulator=0;}else{accumulator+=elapsed;let steps=0;while(accumulator>=1/120&&steps<7){tick(1/120);accumulator-=1/120;steps++;if(freeze>0){accumulator=0;break;}}}}updateHUD();renderFrame(mode==='paused'?0:elapsed);}catch(error){console.error(error);showError('The duel stopped: '+error.message);return;}requestAnimationFrame(frame);}
+// QA_INSERT
+requestAnimationFrame(frame);
+}
+loadEngine();
+</script>
+</body>
+</html>
