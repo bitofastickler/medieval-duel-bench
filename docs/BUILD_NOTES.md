@@ -4,6 +4,19 @@
 
 These are the detailed descriptions and original validation notes from the submitted builds. They preserve the project’s provenance, screenshots, controls, known fixes, evaluation rubric, and limitations. Test statements describe each build’s own checks, not a common comparative test suite. Iron Vigil and Cinder Oath are distinct Codex runs; exact underlying Codex model versions were not recorded.
 
+## Model attribution and submission history
+
+| Build | Model attribution | Source |
+|:--|:--|:--|
+| **Ironmoor Duel** | **Claude Opus 5.5** — confirmed by the repository owner and original commit | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/ef51d43ba2967295d5e42762c79a3cb5748cdf85) |
+| **Ashen Crown** | **Claude Fable 5.2** — recorded in the original commit | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/149c523b2cc1e8f5037fe684219e5beb575281ea) |
+| **Iron Vigil** | **OpenAI — exact model unconfirmed**; submitted through Codex | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/bb5dc8a3fe42093fbbb9ac3ac8d84358b43f352d) · [PR #2](https://github.com/bitofastickler/medieval-duel-bench/pull/2) |
+| **Cinder Oath** | **OpenAI — exact model unconfirmed**; submitted through Codex | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/74a2cfaa1c7cee4744080b138118fa331e2ac934) · [PR #3](https://github.com/bitofastickler/medieval-duel-bench/pull/3) |
+
+**Why there are two OpenAI builds:** Iron Vigil was committed on 13 November 2026 at 22:22 UTC and submitted in PR #2. Cinder Oath was subsequently committed at 23:02 UTC and submitted in PR #3. Both used `codex/index.html`, which caused the merge conflict. The integration preserved Cinder Oath at that existing URL and moved Iron Vigil unchanged to `iron-vigil/index.html`.
+
+The repository owner reports starting and aborting an earlier **SOL** attempt. The available commit and PR records do not establish whether that attempt produced Iron Vigil. Neither OpenAI submission includes an exact model ID, and “Codex” identifies the development workflow rather than a model. Four saved builds therefore do not establish four distinct models or four completed, controlled benchmark runs.
+
 ## Shared integration review · 13 November 2026
 
 All four builds started a round in the shared browser player. Build switching, the prompt-copy confirmation, and the responsive homepage were checked. Each game file matches its submitted Git blob exactly. These checks establish launch and navigation; they do not replace the original validation notes below or measure relative gameplay quality.
@@ -18,7 +31,7 @@ One prompt. No supplied assets. A playable 3D duel in a single HTML file.
 
 **[Choose from all four duels →](https://bitofastickler.github.io/medieval-duel-bench/)** · **[Play Ironmoor Duel](https://bitofastickler.github.io/medieval-duel-bench/ironmoor/)** · **[What it tests](#why-a-duel)** · **[Score your own model](#score-your-own-model)** · **[Read the prompt](#the-prompt)**
 
-**First entry built by Claude (Anthropic) · Runs in any desktop browser · No install, accounts, or API keys**
+**First entry built by Claude Opus 5.5 (Anthropic) · Runs in any desktop browser · No install, accounts, or API keys**
 
 ![Ironmoor Duel: a blue knight faces the Crimson Warden in a torch-lit stone arena](../assets/screenshot.png)
 
@@ -30,7 +43,7 @@ One prompt. No supplied assets. A playable 3D duel in a single HTML file.
 
 A fun, experimental benchmark for new models. Give a model the prompt below and see whether it can produce a 3D melee game that runs on the first try *and* feels good to play.
 
-This repo holds the first entry: **Ironmoor Duel**, a Claude output. Take the same prompt to the next model you want to size up, play the two builds side by side, and the differences jump out fast.
+This repo holds the first entry: **Ironmoor Duel**, a Claude Opus 5.5 output. Take the same prompt to the next model you want to size up, play the two builds side by side, and the differences jump out fast.
 
 The [GitHub Pages home page](https://bitofastickler.github.io/medieval-duel-bench/) is a launcher for all four games. Ironmoor's original HTML is preserved byte-for-byte at `ironmoor/index.html`; the Fable build and all existing screenshots are unchanged. The descriptions, prompt, provenance, and scoring rubric below are retained.
 
@@ -65,10 +78,10 @@ Each model gets the same prompt and its own file, so the builds can be played si
 
 | Entry | Model | File | Play |
 |:--|:--|:--|:--|
-| **Ironmoor Duel** | Claude (first entry) | [`ironmoor/index.html`](../ironmoor/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/ironmoor/) |
+| **Ironmoor Duel** | Claude Opus 5.5 (first entry) | [`ironmoor/index.html`](../ironmoor/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/ironmoor/) |
 | **Ashen Crown** | Claude Fable 5.2 | [`fable-5.2/index.html`](../fable-5.2/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/fable-5.2/) |
-| **Iron Vigil** | OpenAI Codex (separate run) | [`iron-vigil/index.html`](../iron-vigil/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/iron-vigil/) |
-| **Cinder Oath** | OpenAI Codex | [`codex/index.html`](../codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
+| **Iron Vigil** | OpenAI — exact model unconfirmed (Codex workflow) | [`iron-vigil/index.html`](../iron-vigil/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/iron-vigil/) |
+| **Cinder Oath** | OpenAI — exact model unconfirmed (Codex workflow) | [`codex/index.html`](../codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
 
 ### Ashen Crown (Fable 5.2)
 
@@ -175,7 +188,7 @@ To compare fairly, paste that block into a fresh chat with the model you're test
 
 | | |
 |:--|:--|
-| Model | Claude (Anthropic) |
+| Model | Claude Opus 5.5 (Anthropic) |
 | Where it ran | Claude Code, cloud session |
 | Turns to build | One, from the prompt above |
 | Human edits to the game | None |
