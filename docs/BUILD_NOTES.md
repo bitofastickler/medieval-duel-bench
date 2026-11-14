@@ -2,7 +2,7 @@
 
 [Back to the overview](../README.md) · [Play and compare all builds](https://bitofastickler.github.io/medieval-duel-bench/)
 
-These are the detailed descriptions and original validation notes from the submitted builds. They preserve the project’s provenance, screenshots, controls, known fixes, evaluation rubric, and limitations. Test statements describe each build’s own checks, not a common comparative test suite. Iron Vigil and Cinder Oath are distinct Codex runs; exact underlying Codex model versions were not recorded.
+These are the detailed descriptions and original validation notes from the submitted builds. They preserve the project’s provenance, screenshots, controls, known fixes, evaluation rubric, and limitations. Test statements describe each build’s own checks, not a common comparative test suite. Iron Vigil and Cinder Oath are distinct Codex submissions. The repository owner confirmed Cinder Oath used OpenAI Astra with Extra High reasoning; Iron Vigil’s exact model remains unconfirmed.
 
 ## Model attribution and submission history
 
@@ -11,11 +11,11 @@ These are the detailed descriptions and original validation notes from the submi
 | **Ironmoor Duel** | **Claude Opus 5.5** — confirmed by the repository owner and original commit | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/ef51d43ba2967295d5e42762c79a3cb5748cdf85) |
 | **Ashen Crown** | **Claude Fable 5.2** — recorded in the original commit | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/149c523b2cc1e8f5037fe684219e5beb575281ea) |
 | **Iron Vigil** | **OpenAI — exact model unconfirmed**; submitted through Codex | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/bb5dc8a3fe42093fbbb9ac3ac8d84358b43f352d) · [PR #2](https://github.com/bitofastickler/medieval-duel-bench/pull/2) |
-| **Cinder Oath** | **OpenAI — exact model unconfirmed**; submitted through Codex | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/74a2cfaa1c7cee4744080b138118fa331e2ac934) · [PR #3](https://github.com/bitofastickler/medieval-duel-bench/pull/3) |
+| **Cinder Oath** | **OpenAI Astra · Extra High reasoning** — confirmed by the repository owner; submitted through Codex | [Original commit](https://github.com/bitofastickler/medieval-duel-bench/commit/74a2cfaa1c7cee4744080b138118fa331e2ac934) · [PR #3](https://github.com/bitofastickler/medieval-duel-bench/pull/3) |
 
 **Why there are two OpenAI builds:** Iron Vigil was committed on 13 November 2026 at 22:22 UTC and submitted in PR #2. Cinder Oath was subsequently committed at 23:02 UTC and submitted in PR #3. Both used `codex/index.html`, which caused the merge conflict. The integration preserved Cinder Oath at that existing URL and moved Iron Vigil unchanged to `iron-vigil/index.html`.
 
-The repository owner reports starting and aborting an earlier **SOL** attempt. The available commit and PR records do not establish whether that attempt produced Iron Vigil. Neither OpenAI submission includes an exact model ID, and “Codex” identifies the development workflow rather than a model. Four saved builds therefore do not establish four distinct models or four completed, controlled benchmark runs.
+The repository owner reports starting and aborting an earlier **SOL** attempt. The available commit and PR records do not establish whether that attempt produced Iron Vigil. The original OpenAI commits did not include model IDs. The repository owner subsequently confirmed **Cinder Oath was generated with Astra and Extra High reasoning**. Iron Vigil’s exact model remains unconfirmed. “Codex” identifies the development workflow rather than a model. Four saved builds therefore do not establish four distinct models or four completed, controlled benchmark runs.
 
 ## Shared integration review · 13 November 2026
 
@@ -81,7 +81,7 @@ Each model gets the same prompt and its own file, so the builds can be played si
 | **Ironmoor Duel** | Claude Opus 5.5 (first entry) | [`ironmoor/index.html`](../ironmoor/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/ironmoor/) |
 | **Ashen Crown** | Claude Fable 5.2 | [`fable-5.2/index.html`](../fable-5.2/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/fable-5.2/) |
 | **Iron Vigil** | OpenAI — exact model unconfirmed (Codex workflow) | [`iron-vigil/index.html`](../iron-vigil/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/iron-vigil/) |
-| **Cinder Oath** | OpenAI — exact model unconfirmed (Codex workflow) | [`codex/index.html`](../codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
+| **Cinder Oath** | OpenAI Astra · Extra High reasoning | [`codex/index.html`](../codex/index.html) | [Play](https://bitofastickler.github.io/medieval-duel-bench/codex/) |
 
 ### Ashen Crown (Fable 5.2)
 
@@ -119,6 +119,8 @@ Controls follow the prompt, plus `Q` to toggle aim lock, `J` / `K` for light / h
 Validation included simulation checks for combat and round transitions. Browser playtesting remains unverified because the preview environment failed to start.
 
 ### Cinder Oath (Codex)
+
+**Model:** OpenAI Astra, with **Extra High reasoning** (confirmed by the repository owner).
 
 A duel against the Cinder Warden in a ruined, torch-lit monastery. First to three rounds, with three difficulty levels. The mouse aims at a point on the arena floor; WASD moves independently of facing.
 

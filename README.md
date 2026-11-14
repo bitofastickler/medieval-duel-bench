@@ -14,10 +14,10 @@ An independent experiment by [bitofastickler](https://github.com/bitofastickler)
 |:--|:--|:--|:--|:--|
 | **Ironmoor Duel** | Claude Opus 5.5 · original | Lock-on movement; chained light cuts; heavy poise; parry slow-motion | Reported headless smoke test; one overlay fix | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=ironmoor) |
 | **Ashen Crown** | Claude Fable 5.2 | Mouse aim + optional lock-on; three-cut combo; two-bone IK; Verlet ragdoll | Reported headless checks; two fixes | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=ashen-crown) |
-| **Cinder Oath** | OpenAI · exact model unconfirmed (Codex workflow) | Mouse aim; directional round shield; 120 Hz blade sweeps; sustained baiting | 27 in-browser combat/state checks; 60-second simulation; browser interaction checks | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=cinder-oath) |
+| **Cinder Oath** | OpenAI Astra · Extra High reasoning | Mouse aim; directional round shield; 120 Hz blade sweeps; sustained baiting | 27 in-browser combat/state checks; 60-second simulation; browser interaction checks | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=cinder-oath) |
 | **Iron Vigil** | OpenAI · exact model unconfirmed (Codex workflow) | Mouse aim + optional lock-on; kite shield and guarding-sword collision; heavy feints | 18 simulation checks using real Three.js and a stubbed renderer/DOM | [Play](https://bitofastickler.github.io/medieval-duel-bench/play.html?game=iron-vigil) |
 
-**Model attribution:** Claude Opus 5.5 and Claude Fable 5.2 are confirmed in the original commits. Codex names the development workflow, not the underlying model. The two OpenAI submissions do not record exact model IDs; see the [submission history](docs/BUILD_NOTES.md#model-attribution-and-submission-history) for why both builds are retained.
+**Model attribution:** Claude Opus 5.5 and Claude Fable 5.2 are confirmed in the original commits. The repository owner confirmed Cinder Oath used **OpenAI Astra with Extra High reasoning**. Iron Vigil’s exact model remains unconfirmed. Codex names the development workflow, not the model; see the [submission history](docs/BUILD_NOTES.md#model-attribution-and-submission-history) for why both OpenAI builds are retained.
 
 **Integration check (13 November 2026):** all four builds started a round in the shared browser player; build switching and the responsive homepage were checked. This confirms launch and navigation, not comparative gameplay performance.
 
@@ -49,7 +49,7 @@ Build a single-file HTML 3D medieval sword duel using Three.js (from a CDN). No 
 - Health and stamina bars, a round system, and a restart screen
 ```
 
-The first Claude Opus 5.5 run proposed this prompt and implemented it after “Sure! Let’s try it.” Later entries reuse that brief. That origin is part of the experiment’s limitations; it is not a controlled model ranking. Two separate Codex runs produced Iron Vigil and Cinder Oath. Exact underlying Codex model versions were not recorded.
+The first Claude Opus 5.5 run proposed this prompt and implemented it after “Sure! Let’s try it.” Later entries reuse that brief. That origin is part of the experiment’s limitations; it is not a controlled model ranking. Two separate Codex submissions produced Iron Vigil and Cinder Oath. Cinder Oath is attributed to OpenAI Astra with Extra High reasoning, confirmed by the repository owner; Iron Vigil’s exact model is unconfirmed.
 
 ## Run locally
 
